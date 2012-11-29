@@ -51,7 +51,7 @@ class Guidu(models.Model):
 
         if self.fome > 0:
             tempo = agora - self.fome_update
-            updates = tempo.total_seconds() // 60 # 18min
+            updates = tempo.total_seconds() // 1080 # 18min
 
             if updates > 0:
                 self.fome = self.fome - updates
@@ -79,7 +79,7 @@ class Guidu(models.Model):
 
         if self.diversao > 0:
             tempo = agora - self.diversao_update
-            updates = tempo.total_seconds() // 720 
+            updates = tempo.total_seconds() // 720
 
             if updates > 0:
                 self.diversao = self.diversao - updates
