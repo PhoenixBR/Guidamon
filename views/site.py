@@ -56,5 +56,11 @@ def alimentar(request, id_guidu, id_alimento):
     guidu.alimentar(id_alimento)
     return redirect(index)
 
+def banheiro(request, id_guidu, id_banheiro):
+    jogador = request.user.get_profile()
+    guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
+    guidu.banheiro(id_banheiro)
+    return redirect(index)
+
 
 

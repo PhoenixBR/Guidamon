@@ -162,6 +162,16 @@ class Guidu(models.Model):
             self.fome=10
 
         self.save()
+
+    def banheiro(self, alimento):
+
+        self.refresh()
+        if(alimento == '1'):
+            self.fome+=1
+        if(self.fome>10):
+            self.fome=10
+
+        self.save()
         
 
 

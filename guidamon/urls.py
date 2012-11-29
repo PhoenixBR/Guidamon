@@ -18,6 +18,7 @@ urlpatterns = patterns('',
 
     
     url(r'^(\d+)/alimentar/(\d+)/$','views.site.alimentar'),
+    url(r'^(\d+)/banheiro/(\d+)/$','views.site.banheiro'),
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
