@@ -163,13 +163,13 @@ class Guidu(models.Model):
 
         self.save()
 
-    def banheiro(self, alimento):
+    def ir_banheiro(self, tipo_banheiro):
 
         self.refresh()
-        if(alimento == '1'):
-            self.fome+=1
-        if(self.fome>10):
-            self.fome=10
+        if(tipo_banheiro == '1'):
+            self.banheiro+=1
+        if(self.banheiro>10):
+            self.banheiro=10
 
         self.save()
         
