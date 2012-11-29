@@ -1,0 +1,26 @@
+<a href="/logout/">Logout</a>
+
+{% for guidu in guidus %}
+	<table>
+		<tr>
+			<td><img src=" {{ guidu.tipo.img_normal.url }}" width="350"></td>
+			<td><table>
+				<tr><td>Fome: {{guidu.fome}} </td></tr>
+				<tr><td>Higiene: {{guidu.higiene}} </td></tr>
+				<tr><td>Conforto: {{guidu.conforto}} </td></tr>
+				<tr><td>Diversao: {{guidu.diversao}} </td></tr>
+				<tr><td>Banheiro: {{guidu.banheiro}} </td></tr>
+				<tr><td>Social: {{guidu.social}} </td></tr>
+				<tr><td>Energia: {{guidu.energia}} </td></tr>
+				</table>
+			</td>
+			<td>
+				<table>
+				<tr><td><a href="/{{guidu.id}}/alimentar/1">Dar maçã</a></td></tr>
+				<tr><td><a href="/{{guidu.id}}/alimentar/2">Dar torrada</a></td></tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	
+{% endfor %}
