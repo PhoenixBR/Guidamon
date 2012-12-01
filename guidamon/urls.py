@@ -19,6 +19,11 @@ urlpatterns = patterns('',
     
     url(r'^(\d+)/alimentar/(\d+)/$','views.site.alimentar'),
     url(r'^(\d+)/banheiro/(\d+)/$','views.site.banheiro'),
+    url(r'^(\d+)/confortar/(\d+)/$','views.site.confortar'),
+    url(r'^(\d+)/banhar/(\d+)/$','views.site.banhar'),
+    url(r'^(\d+)/divertir/(\d+)/$','views.site.divertir'),
+    url(r'^(\d+)/socializar/(\d+)/$','views.site.socializar'),
+    url(r'^(\d+)/recuperar_energia/(\d+)/$','views.site.recuperar_energia'),
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

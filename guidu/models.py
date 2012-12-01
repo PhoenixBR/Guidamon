@@ -3,6 +3,7 @@ from jogador.models import Jogador
 
 import datetime
 import pytz
+import random
 
 
 class GuiduTipo(models.Model):
@@ -26,13 +27,13 @@ class Guidu(models.Model):
     nome = models.CharField(max_length=50, null=False)
     idade = models.PositiveSmallIntegerField(default=0)
 
-    fome = models.PositiveSmallIntegerField(default=10)
-    higiene = models.PositiveSmallIntegerField(default=10)
-    diversao = models.PositiveSmallIntegerField(default=10)
-    banheiro = models.PositiveSmallIntegerField(default=10)
-    conforto = models.PositiveSmallIntegerField(default=10)
-    social = models.PositiveSmallIntegerField(default=10)
-    energia = models.PositiveSmallIntegerField(default=10)
+    fome = models.PositiveSmallIntegerField(default=random.randint(2,8))
+    higiene = models.PositiveSmallIntegerField(default=random.randint(2,8))
+    diversao = models.PositiveSmallIntegerField(default=random.randint(2,8))
+    banheiro = models.PositiveSmallIntegerField(default=random.randint(2,8))
+    conforto = models.PositiveSmallIntegerField(default=random.randint(2,8))
+    social = models.PositiveSmallIntegerField(default=random.randint(2,8))
+    energia = models.PositiveSmallIntegerField(default=random.randint(2,8))
 
     fome_update = models.DateTimeField(auto_now_add=True)
     higiene_update = models.DateTimeField(auto_now_add=True)
@@ -153,26 +154,98 @@ class Guidu(models.Model):
     def alimentar(self, alimento):
 
         self.refresh()
-        if(alimento == '1'):
-            self.fome+=1
-        elif(alimento == '2'):
-            self.fome+=2
-            self.banheiro-=1
-        if(self.fome>10):
-            self.fome=10
+        funcionou = False
+        if self.fome <10:
+            if(alimento == '1'):
+                self.fome+=1
+            elif(alimento == '2'):
+                self.fome+=2
+                if self.banheiro>=1:
+                    self.banheiro-=1
+            if(self.fome>10):
+                self.fome=10
 
-        self.save()
+            self.save()
+            funcionou = True
+        return funcionou
 
-    def ir_banheiro(self, tipo_banheiro):
+    def obrar(self, tipo_banheiro):
 
         self.refresh()
-        if(tipo_banheiro == '1'):
-            self.banheiro+=1
-        if(self.banheiro>10):
-            self.banheiro=10
+        funcionou = False
+        if self.banheiro <10:
+            if(tipo_banheiro == '1'):
+                self.banheiro+=3
+                if self.higiene >=1:
+                    self.higiene-=1
+            if(self.banheiro>10):
+                self.banheiro=10
 
-        self.save()
-        
+            self.save()
+            funcionou = True
+        return funcionou
 
+    def banhar(self, tipo_banho):
+        self.refresh()
+        funcionou = False
+        if self.higiene <10:
+            if(tipo_banho == '1'):
+                self.higiene+=4
+            if(self.higiene>10):
+                self.higiene=10
 
+            self.save()
+            funcionou = True
+        return funcionou
 
+    def confortar(self, tipo_conforto):
+        self.refresh()
+        funcionou = False
+        if self.conforto <10:
+            if(tipo_conforto == '1'):
+                self.conforto+=5
+            if(self.conforto>10):
+                self.conforto=10
+
+            self.save()
+            funcionou = True
+        return funcionou
+
+    def divertir(self, tipo_diversao):
+        self.refresh()
+        funcionou = False
+        if self.diversao <10:
+            if(tipo_diversao == '1'):
+                self.diversao+=3
+            if(self.diversao>10):
+                self.diversao=10
+
+            self.save()
+            funcionou = True
+        return funcionou
+
+    def socializar(self, tipo_socializacao):
+        self.refresh()
+        funcionou = False
+        if self.social <10:
+            if(tipo_socializacao == '1'):
+                self.social+=7
+            if(self.social>10):
+                self.social=10
+
+            self.save()
+            funcionou = True
+        return funcionou
+
+    def recuperar_energia(self, tipo_energia):
+        self.refresh()
+        funcionou = False
+        if self.energia <10:
+            if(tipo_energia == '1'):
+                self.energia+=5
+            if(self.energia>10):
+                self.energia=10
+
+            self.save()
+            funcionou = True
+        return funcionou

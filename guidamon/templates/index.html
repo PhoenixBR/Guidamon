@@ -1,6 +1,8 @@
 <a href="/logout/">Logout</a>
+<email> Usuário: {{jogador.user.username}}</email>
 
 {% for guidu in guidus %}
+	<h1> {{ guidu.nome }}
 	<table>
 		<tr>
 			<td><img src=" {{ guidu.tipo.img_normal.url }}" width="350"></td>
@@ -12,17 +14,47 @@
 				<tr><td>Banheiro: {{guidu.banheiro}} </td></tr>
 				<tr><td>Social: {{guidu.social}} </td></tr>
 				<tr><td>Energia: {{guidu.energia}} </td></tr>
+				<tr><td><br>Ações: {{jogador.guimoves}} </br></td></tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td>
+				<table border="3"> Fome
+				<tr><td><a href="/{{guidu.id}}/alimentar/1">Dar maçã</a> (Fome: +1) </td></tr>
+				<tr><td><a href="/{{guidu.id}}/alimentar/2">Dar torrada</a> (Fome: +2, Banheiro: -1)</td></tr>
 				</table>
 			</td>
 			<td>
-				<table>
-				<tr><td><a href="/{{guidu.id}}/alimentar/1">Dar maçã</a></td></tr>
-				<tr><td><a href="/{{guidu.id}}/alimentar/2">Dar torrada</a></td></tr>
+				<table border="3"> Banheiro
+				<tr><td><a href="/{{guidu.id}}/banheiro/1">Ir ao banheiro</a> Banheiro: +3, Higiente: -1</td></tr>
 				</table>
 			</td>
 			<td>
-				<table>
-				<tr><td><a href="/{{guidu.id}}/banheiro/1">Ir ao banheiro</a></td></tr>
+				<table border="3"> Conforto
+				<tr><td><a href="/{{guidu.id}}/confortar/1">Fazer massagem</a> Conforto: +5</td></tr>
+				</table>
+			</td>
+			<td>
+				<table border="3"> Higiene
+				<tr><td><a href="/{{guidu.id}}/banhar/1">Tomar uma ducha</a> Higiene: +4</td></tr>
+				</table>
+			</td>
+			<td>
+				<table border="3"> Diversão
+				<tr><td><a href="/{{guidu.id}}/divertir/1">Brincar</a> Diversão: +3</td></tr>
+				</table>
+			</td>
+			<td>
+				<table border="3"> Social
+				<tr><td><a href="/{{guidu.id}}/socializar/1">Amiguinhos</a> Social: +7</td></tr>
+				</table>
+			</td>
+			<td>
+				<table border="3"> Energia
+				<tr><td><a href="/{{guidu.id}}/recuperar_energia/1">Tirar cochilo</a> Energia: +5</td></tr>
 				</table>
 			</td>
 		</tr>

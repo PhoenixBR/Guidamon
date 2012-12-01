@@ -10,10 +10,27 @@ class Jogador(models.Model):
     guicoin = models.PositiveIntegerField(default=0)
     guimoves = models.PositiveSmallIntegerField(default=10)
 
+    update_guimoves = models.DateTimeField(auto_now_add=True)
+
+    def refresh(self):
+    	agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+
+        if self.guimoves > 0:
+            tempo = agora - self.update_guimoves
+            updates = tempo.total_seconds() // 120 # 18min
+
+            if updates > 0:
+                self.guimoves = self.guimoves - updates
+                if self.guimoves < 0:
+                    self.guimoves = 0
+                #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
+                self.update_guimoves = agora
+        else:
+            #se nao existe nenhum update para fazer, atualiza o fome_update
+            self.update_guimoves = agora
+
     def __unicode__(self):
         return self.user.username
-
-
 
 def cria_user_jogador(sender, instance, created, **kwargs):
     if created:
