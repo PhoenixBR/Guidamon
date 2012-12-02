@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+import datetime
+import pytz
+
 # Create your models here.
 
 class Jogador(models.Model):
@@ -15,14 +18,14 @@ class Jogador(models.Model):
     def refresh(self):
     	agora = datetime.datetime.now(pytz.timezone('America/Recife'))
 
-        if self.guimoves > 0:
+        if self.guimoves < 10:
             tempo = agora - self.update_guimoves
             updates = tempo.total_seconds() // 120 # 18min
 
             if updates > 0:
-                self.guimoves = self.guimoves - updates
-                if self.guimoves < 0:
-                    self.guimoves = 0
+                self.guimoves = self.guimoves + updates
+                if self.guimoves > 10:
+                    self.guimoves = 10
                 #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
                 self.update_guimoves = agora
         else:

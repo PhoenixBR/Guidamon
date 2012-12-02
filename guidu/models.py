@@ -249,3 +249,7 @@ class Guidu(models.Model):
             self.save()
             funcionou = True
         return funcionou
+
+    def calcular_humor(self):
+        humor = self.fome + self.higiene + self.diversao + self.banheiro + self.conforto + self.social + self.energia
+        return humor

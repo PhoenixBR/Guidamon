@@ -5,7 +5,16 @@
 	<h1> {{ guidu.nome }}
 	<table>
 		<tr>
-			<td><img src=" {{ guidu.tipo.img_normal.url }}" width="350"></td>
+			<td>
+
+				{% if guidu.calcular_humor >= 56 %} 
+					<img src=" {{ guidu.tipo.img_feliz.url }}" width="250">
+				{% elif guidu.calcular_humor <= 28 %} 
+					<img src=" {{ guidu.tipo.img_triste.url }}" width="250">
+				{% else %}
+					<img src=" {{ guidu.tipo.img_normal.url }}" width="250">
+				{% endif %}
+			</td>
 			<td><table>
 				<tr><td>Fome: {{guidu.fome}} </td></tr>
 				<tr><td>Higiene: {{guidu.higiene}} </td></tr>

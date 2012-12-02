@@ -22,8 +22,12 @@ def index(request):
     user = request.user
     jogador = user.get_profile()
     guidus = jogador.guidus.all()
+    jogador.refresh()
+    jogador.save()
+    print jogador.guimoves
     for guidu in guidus:
         guidu.refresh()
+        guidu.save()
 
     if guidus:
         return render_to_response("index.html", {"guidus": guidus, "jogador": jogador})
