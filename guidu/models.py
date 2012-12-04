@@ -40,6 +40,7 @@ class Guidu(models.Model):
     social_update = models.DateTimeField(auto_now_add=True)
     energia_update = models.DateTimeField(auto_now_add=True)
 
+
     data_nascimento = models.DateTimeField(auto_now_add=True)
 
     humor = models.CharField(max_length=50, default="normal")
