@@ -14,7 +14,6 @@ class GuiduTipo(models.Model):
     img_feliz = models.ImageField(upload_to="guidutipo")
     img_triste = models.ImageField(upload_to="guidutipo")
     img_entediado = models.ImageField(upload_to="guidutipo")
-    teste = models.PositiveSmallIntegerField(default=10)
 
     def __unicode__(self):
         return self.nome_tipo
