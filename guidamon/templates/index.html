@@ -1,5 +1,12 @@
-<a href="/logout/">Logout</a>
+<script type="text/javascript">
+window.onload = function(){
+        setTimeout(function(){window.location = "/";}, 120000);
+}
+</script>
+
 <email> Usuário: {{jogador.user.username}}</email>
+<a href="/lista_guidus/">Top Guidus</a>
+<a href="/logout/">Logout</a>
 
 {% for guidu in guidus %}
 	<h1> {{ guidu.nome }}
@@ -7,18 +14,18 @@
 		<tr>
 			<td>
 
-				{% if guidu.calcular_humor >= 56 %} 
+				{% if guidu.calcular_humor == "feliz" %} 
 					<img src=" {{ guidu.tipo.img_feliz.url }}" width="250">
-				{% elif guidu.calcular_humor <= 28 %} 
+				{% elif guidu.calcular_humor == "triste" or guidu.atributo_baixo%} 
 					<img src=" {{ guidu.tipo.img_triste.url }}" width="250">
 				{% else %}
 					<img src=" {{ guidu.tipo.img_normal.url }}" width="250">
 				{% endif %}
 			</td>
 			<td><table>
+				<tr><td><br /> Idade: {{guidu.saber_idade_dias}} dia(s)</td></tr>
 				<tr><td>Fome: {{guidu.fome}} </td></tr>
 				<tr><td>Higiene: {{guidu.higiene}} </td></tr>
-				<tr><td>Conforto: {{guidu.conforto}} </td></tr>
 				<tr><td>Diversao: {{guidu.diversao}} </td></tr>
 				<tr><td>Banheiro: {{guidu.banheiro}} </td></tr>
 				<tr><td>Social: {{guidu.social}} </td></tr>
@@ -39,11 +46,6 @@
 			<td>
 				<table border="3"> Banheiro
 				<tr><td><a href="/{{guidu.id}}/banheiro/1">Ir ao banheiro</a> Banheiro: +3, Higiente: -1</td></tr>
-				</table>
-			</td>
-			<td>
-				<table border="3"> Conforto
-				<tr><td><a href="/{{guidu.id}}/confortar/1">Fazer massagem</a> Conforto: +5</td></tr>
 				</table>
 			</td>
 			<td>

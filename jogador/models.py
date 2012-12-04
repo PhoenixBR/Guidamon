@@ -32,6 +32,8 @@ class Jogador(models.Model):
             #se nao existe nenhum update para fazer, atualiza o fome_update
             self.update_guimoves = agora
 
+        
+
     def __unicode__(self):
         return self.user.username
 

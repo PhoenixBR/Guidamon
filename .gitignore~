@@ -1,0 +1,3 @@
+*.pyc
+guidamon.db
+sqlite3.exe

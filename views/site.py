@@ -1,18 +1,16 @@
-from django.shortcuts import HttpResponse, redirect, render_to_response, get_object_or_404
+from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.template import RequestContext
 
 from guidu.models import GuiduTipo, Guidu
-from guidu.form import FormGuidu
-
 
 def registrar(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST, request.FILES)
         if form.is_valid(): #podia ser non_fields_error ?
             form.save()
-            redirect(index)
+            return redirect(index)
     else:
         form = UserCreationForm()   
     return render_to_response("registrar.html", {'form': form}, context_instance=RequestContext(request))
@@ -36,13 +34,18 @@ def index(request):
     
 @login_required
 def adocao(request):
+    profile = request.user.get_profile()
+    if profile.guidus.all():
+        return redirect(index)
     guidutipos = GuiduTipo.objects.all()
     return render_to_response("adocao.html",{'guidutipos':guidutipos})
 
 @login_required
 def adotar(request, id_guidutipo):
+    profile = request.user.get_profile()
+    if profile.guidus.all():
+        return redirect(index)
     if request.method == 'POST':
-        profile = request.user.get_profile()
         guidutipo = get_object_or_404(GuiduTipo, pk=id_guidutipo)
         nome = request.POST["botao_cadastrar"]
         print guidutipo
@@ -51,10 +54,10 @@ def adotar(request, id_guidutipo):
         return redirect(index)
         
     else:
-        form = FormGuidu() 
-        return render_to_response("adotar.html", {'form':form}, 
+        return render_to_response("adotar.html", {}, 
             context_instance=RequestContext(request))
 
+@login_required
 def alimentar(request, id_guidu, id_alimento):
     jogador = request.user.get_profile()
     guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
@@ -65,6 +68,7 @@ def alimentar(request, id_guidu, id_alimento):
             jogador.save()
     return redirect(index)
 
+@login_required
 def banheiro(request, id_guidu, id_banheiro):
     jogador = request.user.get_profile()
     guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
@@ -75,16 +79,7 @@ def banheiro(request, id_guidu, id_banheiro):
             jogador.save()
     return redirect(index)
 
-def confortar(request, id_guidu, id_conforto):
-    jogador = request.user.get_profile()
-    guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
-    if jogador.guimoves>0:
-        funcionou = guidu.confortar(id_conforto)
-        if funcionou:
-            jogador.guimoves -= 1
-            jogador.save()
-    return redirect(index)
-
+@login_required
 def banhar(request, id_guidu, id_banho):
     jogador = request.user.get_profile()
     guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
@@ -95,6 +90,7 @@ def banhar(request, id_guidu, id_banho):
             jogador.save()
     return redirect(index)
 
+@login_required
 def divertir(request, id_guidu, id_diversao):
     jogador = request.user.get_profile()
     guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
@@ -105,6 +101,7 @@ def divertir(request, id_guidu, id_diversao):
             jogador.save()
     return redirect(index)
 
+@login_required
 def socializar(request, id_guidu, id_socializar):
     jogador = request.user.get_profile()
     guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
@@ -115,6 +112,7 @@ def socializar(request, id_guidu, id_socializar):
             jogador.save()
     return redirect(index)
 
+@login_required
 def recuperar_energia(request, id_guidu, id_energia):
     jogador = request.user.get_profile()
     guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
@@ -124,6 +122,11 @@ def recuperar_energia(request, id_guidu, id_energia):
             jogador.guimoves -= 1
             jogador.save()
     return redirect(index)
+
+@login_required
+def lista_guidus(request):
+    guidus = Guidu.objects.all().order_by('data_nascimento')
+    return render_to_response("lista_guidus.html", {'guidus':guidus})
 
 
 

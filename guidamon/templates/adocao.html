@@ -1,5 +1,5 @@
     <h1>Guidus para adoção</h1>
     {% for guidutipo in guidutipos.all %}
-        <p><a href="/adotar/{{guidutipo.id}}"><img src="{{guidutipo.img_normal.url}}"/></a><b>{{guidutipo.nome_tipo}}</b>
+        <p><a href="/adotar/{{guidutipo.id}}"><img src="{{guidutipo.img_normal.url}}" width="250"/></a><b>{{guidutipo.nome_tipo}}</b>
         </p>
     {%  endfor %}

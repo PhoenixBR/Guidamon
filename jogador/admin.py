@@ -10,7 +10,7 @@ class JogadorAdmin(admin.ModelAdmin):
 	list_display = ('user','guicoin','guimoves')
  
 class GuiduAdmin(admin.ModelAdmin):
-	list_display = ('jogador', 'nome', 'idade')
+	list_display = ('jogador', 'nome')
 
 class GuiduTipoAdmin(admin.ModelAdmin):
 	pass

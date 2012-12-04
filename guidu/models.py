@@ -25,13 +25,11 @@ class Guidu(models.Model):
     jogador = models.ForeignKey(Jogador, null=True, related_name="guidus")
 
     nome = models.CharField(max_length=50, null=False)
-    idade = models.PositiveSmallIntegerField(default=0)
 
     fome = models.PositiveSmallIntegerField(default=random.randint(2,8))
     higiene = models.PositiveSmallIntegerField(default=random.randint(2,8))
     diversao = models.PositiveSmallIntegerField(default=random.randint(2,8))
     banheiro = models.PositiveSmallIntegerField(default=random.randint(2,8))
-    conforto = models.PositiveSmallIntegerField(default=random.randint(2,8))
     social = models.PositiveSmallIntegerField(default=random.randint(2,8))
     energia = models.PositiveSmallIntegerField(default=random.randint(2,8))
 
@@ -39,9 +37,10 @@ class Guidu(models.Model):
     higiene_update = models.DateTimeField(auto_now_add=True)
     diversao_update = models.DateTimeField(auto_now_add=True)
     banheiro_update = models.DateTimeField(auto_now_add=True)
-    conforto_update = models.DateTimeField(auto_now_add=True)
     social_update = models.DateTimeField(auto_now_add=True)
     energia_update = models.DateTimeField(auto_now_add=True)
+
+    data_nascimento = models.DateTimeField(auto_now_add=True)
 
     humor = models.CharField(max_length=50, default="normal")
     
@@ -106,20 +105,6 @@ class Guidu(models.Model):
             #se nao existe nenhum update para fazer, atualiza o fome_update
             self.banheiro_update = agora
 
-        if self.conforto > 0:
-            tempo = agora - self.conforto_update
-            updates = tempo.total_seconds() // 1080 #18min
-
-            if updates > 0:
-                self.conforto = self.conforto - updates
-                if self.conforto < 0:
-                    self.conforto = 0
-                #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
-                self.conforto_update = agora
-        else:
-            #se nao existe nenhum update para fazer, atualiza o fome_update
-            self.conforto_update = agora
-
         if self.social > 0:
             tempo = agora - self.social_update
             updates = tempo.total_seconds() // 1080 #18min
@@ -150,6 +135,18 @@ class Guidu(models.Model):
 
     def __unicode__(self):
         return self.nome
+
+    def saber_idade_segundos(self):
+        agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+        idade = (agora - self.data_nascimento).seconds
+        return idade
+
+
+
+    def saber_idade_dias(self):
+        agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+        idade = (agora - self.data_nascimento).days
+        return idade
 
     def alimentar(self, alimento):
 
@@ -198,19 +195,6 @@ class Guidu(models.Model):
             funcionou = True
         return funcionou
 
-    def confortar(self, tipo_conforto):
-        self.refresh()
-        funcionou = False
-        if self.conforto <10:
-            if(tipo_conforto == '1'):
-                self.conforto+=5
-            if(self.conforto>10):
-                self.conforto=10
-
-            self.save()
-            funcionou = True
-        return funcionou
-
     def divertir(self, tipo_diversao):
         self.refresh()
         funcionou = False
@@ -251,5 +235,18 @@ class Guidu(models.Model):
         return funcionou
 
     def calcular_humor(self):
-        humor = self.fome + self.higiene + self.diversao + self.banheiro + self.conforto + self.social + self.energia
-        return humor
+        qntd_atributos = 6
+        calc_humor = self.fome + self.higiene + self.diversao + self.banheiro + self.social + self.energia
+        if (calc_humor/qntd_atributos) >= 8:
+            return "feliz"
+        elif (calc_humor/qntd_atributos) < 4 or self.atributo_baixo():
+            return "triste"
+        else:
+            return "normal"
+
+    def atributo_baixo(self):
+        baixo = 4
+        tem_baixo = False
+        if self.humor <= baixo or self.higiene <= baixo or self.diversao <= baixo or self.banheiro <= baixo or self.social <= baixo or self.energia<= baixo:
+            tem_baixo = True
+        return tem_baixo
