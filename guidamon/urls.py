@@ -7,10 +7,10 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$','views.site.index'),
+    url(r'^$','views.site.index', name='pagina_inicial'),
     url(r'^adocao/$','views.site.adocao', name='pagina_de_adocao'),
     url(r'^adotar/(\d+)/$','views.site.adotar'),
-    url(r'^lista_guidus','views.site.lista_guidus'),
+    url(r'^lista_guidus','views.site.lista_guidus', name='pagina_da_lista'),
     url(r'^login/$',"django.contrib.auth.views.login", 
         {"template_name": "logar.html"}),
     url(r'^logout/', "django.contrib.auth.views.logout_then_login", 
