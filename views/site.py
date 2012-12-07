@@ -5,7 +5,7 @@ from django.template import RequestContext
 
 from guidu.models import GuiduTipo, Guidu
 
-def registrar(request):
+def cadastrar(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST, request.FILES)
         if form.is_valid(): #podia ser non_fields_error ?
@@ -13,7 +13,7 @@ def registrar(request):
             return redirect(index)
     else:
         form = UserCreationForm()   
-    return render_to_response("registrar.html", {'form': form}, context_instance=RequestContext(request))
+    return render_to_response("cadastrar.html", {'form': form}, context_instance=RequestContext(request))
 
 @login_required
 def index(request):
