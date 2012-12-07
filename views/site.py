@@ -28,7 +28,7 @@ def index(request):
         guidu.save()
 
     if guidus:
-        return render_to_response("index.html", {"guidus": guidus, "jogador": jogador})
+        return render_to_response("index.html", {"guidus": guidus, "jogador": jogador}, context_instance=RequestContext(request))
     else:
         return redirect(adocao)
     
@@ -38,7 +38,7 @@ def adocao(request):
     if profile.guidus.all():
         return redirect(index)
     guidutipos = GuiduTipo.objects.all()
-    return render_to_response("adocao.html",{'guidutipos':guidutipos})
+    return render_to_response("adocao.html",{'guidutipos':guidutipos, "jogador": jogador}, context_instance=RequestContext(request))
 
 @login_required
 def adotar(request, id_guidutipo):
@@ -54,7 +54,7 @@ def adotar(request, id_guidutipo):
         return redirect(index)
         
     else:
-        return render_to_response("adotar.html", {}, 
+        return render_to_response("adotar.html", {"jogador": profile}, 
             context_instance=RequestContext(request))
 
 @login_required
@@ -125,8 +125,9 @@ def recuperar_energia(request, id_guidu, id_energia):
 
 @login_required
 def lista_guidus(request):
+    jogador = request.user.get_profile()
     guidus = Guidu.objects.all().order_by('data_nascimento')
-    return render_to_response("lista_guidus.html", {'guidus':guidus})
+    return render_to_response("lista_guidus.html", {'guidus':guidus, "jogador": jogador})
 
 
 

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% csrf_token %}
 
 {% block conteudo %}
 
@@ -8,7 +9,7 @@ window.onload = function(){
         setTimeout(function(){window.location = "/";}, 120000);
 }
 </script>
-<img src="{% static 'imagens/zapdos.png' %}" />
+<!--<img src="{% static 'imagens/zapdos.png' %}" />-->
 
 {% for guidu in guidus %}
 	<h1> {{ guidu.nome }}</h1>
@@ -16,11 +17,11 @@ window.onload = function(){
 		<tr>
 			<td>
 				{% if guidu.calcular_humor == "feliz" %} 
-					<img src=" {{ guidu.tipo.img_feliz.url }}" width="250">
+					<img src="{{ STATIC_URL }}imagens/{{guidu.tipo.nome_tipo}}/feliz" width="250"/>
 				{% elif guidu.calcular_humor == "triste" or guidu.atributo_baixo%}
-					<img src=" {{ guidu.tipo.img_triste.url }}" width="250">
+					<img src="{{ STATIC_URL }}imagens/{{guidu.tipo.nome_tipo}}/triste" width="250"/>
 				{% else %}
-					<img src=" {{ guidu.tipo.img_normal.url }}" width="250">
+					<img src="{{ STATIC_URL }}imagens/{{guidu.tipo.nome_tipo}}/normal" width="250"/>
 				{% endif %}
 			</td>
 			<td><table>

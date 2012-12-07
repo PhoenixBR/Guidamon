@@ -10,11 +10,6 @@ class GuiduTipo(models.Model):
 
     nome_tipo = models.CharField(max_length=50)
 
-    img_normal = models.ImageField(upload_to="guidutipo")
-    img_feliz = models.ImageField(upload_to="guidutipo")
-    img_triste = models.ImageField(upload_to="guidutipo")
-    img_entediado = models.ImageField(upload_to="guidutipo")
-
     def __unicode__(self):
         return self.nome_tipo
 

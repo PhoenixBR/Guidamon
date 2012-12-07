@@ -1,5 +1,13 @@
+{% extends "base.html" %}
+{% csrf_token %}
+{% load staticfiles %}
+
+{% block conteudo %}
+
     <h1>Guidus para adoção</h1>
     {% for guidutipo in guidutipos.all %}
-        <p><a href="/adotar/{{guidutipo.id}}"><img src="{{guidutipo.img_normal.url}}" width="250"/></a><b>{{guidutipo.nome_tipo}}</b>
+        <p><a href="/adotar/{{guidutipo.id}}"><img src="{{ STATIC_URL }}imagens/{{guidutipo.nome_tipo}}/normal" width="250"/><b>{{guidutipo.nome_tipo}}</b>
         </p>
     {%  endfor %}
+
+{% endblock %}
