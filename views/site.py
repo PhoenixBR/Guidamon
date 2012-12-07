@@ -38,7 +38,7 @@ def adocao(request):
     if profile.guidus.all():
         return redirect(index)
     guidutipos = GuiduTipo.objects.all()
-    return render_to_response("adocao.html",{'guidutipos':guidutipos, "jogador": jogador}, context_instance=RequestContext(request))
+    return render_to_response("adocao.html",{'guidutipos':guidutipos, "jogador": profile}, context_instance=RequestContext(request))
 
 @login_required
 def adotar(request, id_guidutipo):
