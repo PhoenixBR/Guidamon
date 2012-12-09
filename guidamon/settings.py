@@ -1,6 +1,6 @@
 # Django settings for guidamon project.
 import os.path
-#import dj_database_url
+import dj_database_url
 
 
 DEBUG = True
@@ -13,9 +13,9 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-#DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -25,7 +25,7 @@ DATABASES = {
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
-}
+}'''
 
 
 
