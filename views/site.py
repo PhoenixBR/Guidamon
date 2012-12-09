@@ -113,11 +113,22 @@ def socializar(request, id_guidu, id_socializar):
     return redirect(index)
 
 @login_required
-def recuperar_energia(request, id_guidu, id_energia):
+def dormir(request, id_guidu):
     jogador = request.user.get_profile()
     guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
     if jogador.guimoves>0:
-        funcionou = guidu.recuperar_energia(id_energia)
+        funcionou = guidu.dormir()
+        if funcionou:
+            jogador.guimoves -= 1
+            jogador.save()
+    return redirect(index)
+
+@login_required
+def acordar(request, id_guidu):
+    jogador = request.user.get_profile()
+    guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
+    if jogador.guimoves>0:
+        funcionou = guidu.acordar()
         if funcionou:
             jogador.guimoves -= 1
             jogador.save()
@@ -131,3 +142,4 @@ def lista_guidus(request):
 
 
 
+#verificar se nao eh o caso de colocar jogador.refresh() antes de todas as acoes.

@@ -35,6 +35,7 @@ class Guidu(models.Model):
     social_update = models.DateTimeField(auto_now_add=True)
     energia_update = models.DateTimeField(auto_now_add=True)
 
+    esta_dormindo = models.BooleanField(default=False)
 
     data_nascimento = models.DateTimeField(auto_now_add=True)
 
@@ -44,90 +45,148 @@ class Guidu(models.Model):
     def refresh(self):
         #pega a hora atual
         agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+        periodos_acordado = {'periodo_fome':1080, 'periodo_higiene':2160, 
+                             'periodo_diversao':720, 'periodo_banheiro':1080, 
+                             'periodo_social':1080, 'periodo_energia':5760}
+        periodos_dormindo = {'periodo_fome':2880, 'periodo_higiene':2880, 
+                             'periodo_diversao':5760, 'periodo_banheiro':2880, 
+                             'periodo_social':5760, 'periodo_energia':2880}
 
+        # Fome
         if self.fome > 0:
             tempo = agora - self.fome_update
-            updates = tempo.total_seconds() // 1080 # 18min
+            if self.esta_dormindo:
+                updates = tempo.total_seconds() // periodos_dormindo['periodo_fome']
+            else:
+                updates = tempo.total_seconds() // periodos_acordado['periodo_fome']
 
             if updates > 0:
                 self.fome = self.fome - updates
                 if self.fome < 0:
                     self.fome = 0
-                #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
-                self.fome_update = agora
+                    #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
+                if self.esta_dormindo:
+                    self.fome_update = self.fome_update + datetime.timedelta(seconds=updates*periodos_dormindo['periodo_fome'])
+                else:
+                    self.fome_update = self.fome_update + datetime.timedelta(seconds=updates*periodos_acordado['periodo_fome'])
         else:
             #se nao existe nenhum update para fazer, atualiza o fome_update
             self.fome_update = agora
-         
+        
+        # Higiene
         if self.higiene > 0:
             tempo = agora - self.higiene_update
-            updates = tempo.total_seconds() // 2160 #36min
+            if self.esta_dormindo:
+                updates = tempo.total_seconds() // periodos_dormindo['periodo_higiene']
+            else:
+                updates = tempo.total_seconds() // periodos_acordado['periodo_higiene']
 
             if updates > 0:
                 self.higiene = self.higiene - updates
                 if self.higiene < 0:
                     self.higiene = 0
-                #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
-                self.higiene_update = agora
+                    #agora que verificou o ultimo update de hp, atualiza a variavel higiene_update
+                if self.esta_dormindo:
+                    self.higiene_update = self.higiene_update + datetime.timedelta(seconds=updates*periodos_dormindo['periodo_higiene'])
+                else:
+                    self.higiene_update = self.higiene_update + datetime.timedelta(seconds=updates*periodos_acordado['periodo_higiene'])
         else:
-            #se nao existe nenhum update para fazer, atualiza o fome_update
+            #se nao existe nenhum update para fazer, atualiza o higiene_update
             self.higiene_update = agora
 
+        # Diversao
         if self.diversao > 0:
             tempo = agora - self.diversao_update
-            updates = tempo.total_seconds() // 720
+            if self.esta_dormindo:
+                updates = tempo.total_seconds() // periodos_dormindo['periodo_diversao']
+            else:
+                updates = tempo.total_seconds() // periodos_acordado['periodo_diversao']
 
             if updates > 0:
                 self.diversao = self.diversao - updates
                 if self.diversao < 0:
                     self.diversao = 0
-                #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
-                self.diversao_update = agora
+                    #agora que verificou o ultimo update de hp, atualiza a variavel diversao_update
+                if self.esta_dormindo:
+                    self.diversao_update = self.diversao_update + datetime.timedelta(seconds=updates*periodos_dormindo['periodo_diversao'])
+                else:
+                    self.diversao_update = self.diversao_update + datetime.timedelta(seconds=updates*periodos_acordado['periodo_diversao'])
         else:
             #se nao existe nenhum update para fazer, atualiza o fome_update
             self.diversao_update = agora
 
+        # Banheiro
         if self.banheiro > 0:
             tempo = agora - self.banheiro_update
-            updates = tempo.total_seconds() // 1080 #18min
+            if self.esta_dormindo:
+                updates = tempo.total_seconds() // periodos_dormindo['periodo_banheiro']
+            else:
+                updates = tempo.total_seconds() // periodos_acordado['periodo_banheiro']
 
             if updates > 0:
                 self.banheiro = self.banheiro - updates
                 if self.banheiro < 0:
                     self.banheiro = 0
-                #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
-                self.banheiro_update = agora
+                #agora que verificou o ultimo update de hp, atualiza a variavel banheiro_update
+                if self.esta_dormindo:
+                    self.banheiro_update = self.banheiro_update + datetime.timedelta(seconds=updates*periodos_dormindo['periodo_banheiro'])
+                else:
+                    self.banheiro_update = self.banheiro_update + datetime.timedelta(seconds=updates*periodos_acordado['periodo_banheiro'])
         else:
-            #se nao existe nenhum update para fazer, atualiza o fome_update
+            #se nao existe nenhum update para fazer, atualiza o banheiro_update
             self.banheiro_update = agora
 
+        # Social
         if self.social > 0:
             tempo = agora - self.social_update
-            updates = tempo.total_seconds() // 1080 #18min
+            if self.esta_dormindo:
+                updates = tempo.total_seconds() // periodos_dormindo['periodo_social']
+            else:
+                updates = tempo.total_seconds() // periodos_acordado['periodo_social']
 
             if updates > 0:
                 self.social = self.social - updates
                 if self.social < 0:
                     self.social = 0
-                #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
-                self.social_update = agora
+                #agora que verificou o ultimo update de hp, atualiza a variavel social_update
+                if self.esta_dormindo:
+                    self.social_update = self.social_update + datetime.timedelta(seconds=updates*periodos_dormindo['periodo_social'])
+                else:
+                    self.social_update = self.social_update + datetime.timedelta(seconds=updates*periodos_acordado['periodo_social'])
         else:
-            #se nao existe nenhum update para fazer, atualiza o fome_update
+            #se nao existe nenhum update para fazer, atualiza o social_update
             self.social_update = agora
 
-        if self.energia > 0:
-            tempo = agora - self.energia_update
-            updates = tempo.total_seconds() // 1080 #18min
+        # Energia
+        if self.esta_dormindo:
+            if self.energia < 10:
+                tempo = agora - self.energia_update
+                updates = tempo.total_seconds() // periodos_dormindo['periodo_energia']
 
-            if updates > 0:
-                self.energia = self.energia - updates
-                if self.energia < 0:
-                    self.energia = 0
-                #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
-                self.energia_update = agora
+                if updates > 0:
+                    self.energia = self.energia + updates
+                    if self.energia >= 10:
+                        self.energia = 10
+                        self.acordar()
+                    #agora que verificou o ultimo update de hp, atualiza a variavel energia_update
+                    self.energia_update = self.energia_update + datetime.timedelta(seconds=updates*periodos_dormindo['periodo_energia'])
+            else:
+                #se nao existe nenhum update para fazer, atualiza o energia_update
+                self.update_guimoves = agora
         else:
-            #se nao existe nenhum update para fazer, atualiza o fome_update
-            self.energia_update = agora
+            if self.energia > 0:
+                tempo = agora - self.energia_update
+                updates = tempo.total_seconds() // periodos_acordado['periodo_energia']
+
+                if updates > 0:
+                    self.energia = self.energia - updates
+                    if self.energia < 0:
+                        self.energia = 0
+                    #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
+                    self.fome_update = self.fome_update + datetime.timedelta(seconds=updates*periodos_acordado['periodo_fome'])
+            else:
+                #se nao existe nenhum update para fazer, atualiza o fome_update
+                self.energia_update = agora
 
     def __unicode__(self):
         return self.nome
@@ -136,8 +195,6 @@ class Guidu(models.Model):
         agora = datetime.datetime.now(pytz.timezone('America/Recife'))
         idade = (agora - self.data_nascimento).seconds
         return idade
-
-
 
     def saber_idade_dias(self):
         agora = datetime.datetime.now(pytz.timezone('America/Recife'))
@@ -148,7 +205,7 @@ class Guidu(models.Model):
 
         self.refresh()
         funcionou = False
-        if self.fome <10:
+        if self.fome <10 and (not self.esta_dormindo):
             if(alimento == '1'):
                 self.fome+=1
             elif(alimento == '2'):
@@ -166,7 +223,7 @@ class Guidu(models.Model):
 
         self.refresh()
         funcionou = False
-        if self.banheiro <10:
+        if self.banheiro <10 and (not self.esta_dormindo):
             if(tipo_banheiro == '1'):
                 self.banheiro+=3
                 if self.higiene >=1:
@@ -181,7 +238,7 @@ class Guidu(models.Model):
     def banhar(self, tipo_banho):
         self.refresh()
         funcionou = False
-        if self.higiene <10:
+        if self.higiene <10 and (not self.esta_dormindo):
             if(tipo_banho == '1'):
                 self.higiene+=4
             if(self.higiene>10):
@@ -194,7 +251,7 @@ class Guidu(models.Model):
     def divertir(self, tipo_diversao):
         self.refresh()
         funcionou = False
-        if self.diversao <10:
+        if self.diversao <10 and (not self.esta_dormindo):
             if(tipo_diversao == '1'):
                 self.diversao+=3
             if(self.diversao>10):
@@ -207,24 +264,11 @@ class Guidu(models.Model):
     def socializar(self, tipo_socializacao):
         self.refresh()
         funcionou = False
-        if self.social <10:
+        if self.social <10 and (not self.esta_dormindo):
             if(tipo_socializacao == '1'):
                 self.social+=7
             if(self.social>10):
                 self.social=10
-
-            self.save()
-            funcionou = True
-        return funcionou
-
-    def recuperar_energia(self, tipo_energia):
-        self.refresh()
-        funcionou = False
-        if self.energia <10:
-            if(tipo_energia == '1'):
-                self.energia+=5
-            if(self.energia>10):
-                self.energia=10
 
             self.save()
             funcionou = True
@@ -241,8 +285,28 @@ class Guidu(models.Model):
             return "normal"
 
     def atributo_baixo(self):
-        baixo = 4
+        baixo = 2
         tem_baixo = False
         if self.humor <= baixo or self.higiene <= baixo or self.diversao <= baixo or self.banheiro <= baixo or self.social <= baixo or self.energia<= baixo:
             tem_baixo = True
         return tem_baixo
+
+    def dormir(self):
+        self.refresh()
+        funcionou = False
+        if self.energia <10 and self.esta_dormindo == False:
+            self.esta_dormindo = True
+            self.energia_update = datetime.datetime.now(pytz.timezone('America/Recife'))
+            self.save()
+            funcionou = True
+        return funcionou
+
+    def acordar(self):
+        self.refresh()
+        funcionou = False
+        if self.esta_dormindo == True:
+            self.esta_dormindo = False
+            self.energia_update = datetime.datetime.now(pytz.timezone('America/Recife'))
+            self.save()
+            funcionou = True
+        return funcionou

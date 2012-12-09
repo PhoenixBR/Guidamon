@@ -17,17 +17,19 @@ class Jogador(models.Model):
 
     def refresh(self):
     	agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+        periodo = 120 #2min
 
         if self.guimoves < 10:
             tempo = agora - self.update_guimoves
-            updates = tempo.total_seconds() // 120 # 18min
+            updates = tempo.total_seconds() // periodo
 
             if updates > 0:
                 self.guimoves = self.guimoves + updates
                 if self.guimoves > 10:
                     self.guimoves = 10
                 #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
-                self.update_guimoves = agora
+                #self.update_guimoves = agora
+                self.update_guimoves = self.update_guimoves + datetime.timedelta(seconds=updates*periodo)
         else:
             #se nao existe nenhum update para fazer, atualiza o fome_update
             self.update_guimoves = agora
