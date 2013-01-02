@@ -14,29 +14,64 @@
 
       </div>
 
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="span4">
-          <h2>Tamagotchi</h2>
-          <p><img src="{{ STATIC_URL }}imagens/Kuma	/feliz" width="250"/></p>
-          <p>Adote um Guidu, alimente, dê banho, divirta-o e bote pra dormir quando estiver cansado. Veja ele crescer forte e saudável. Só depende de você!</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="span4">
-          <h2>The Sims</h2>
-          <p><img src="{{ STATIC_URL }}imagens/Pingu/feliz" width="250"/></p>
-          <p>Monte a casinha do seu Guidu, compre móveis e itens e personalize do seu jeito! Leve seu Guidu pra passear em parques, florestas, até em clubes! Deixe seu Guidu se divertindo com os Guidus de outros usuários enquanto você se diverte conhecendo muita gente online!</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-       </div>
-        <div class="span4">
-          <h2>Pokémon</h2>
-          <p><img src="{{ STATIC_URL }}imagens/Liko/feliz" width="250"/></p>
-          <p>Crie e eduque seu Guidu com carinho enquanto ensina truques e golpes de pokémons de verdade! Participe de torneios, ganhe insígneas, evolua seu Guidu e torne-se o líder do mundo Guidamon!</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-      </div>
+      
+      
+        
+        <ul class="thumbnails">
+			<li class="span4">
+			    <div class="thumbnail">
+				    <h2>Tamagotchi</h2>
+					<p><img src="{{ STATIC_URL }}imagens/Kuma/feliz" width="250"/></p>
+					<p>Adote um Guidu, alimente, dê banho, divirta-o e bote pra dormir quando estiver cansado. Veja ele crescer forte e saudável. Só depende de você!</p>
+					<p><a class="btn" href="#">Ver detalhes &raquo;</a></p>
+		      		
+			    </div>
+		  	</li>
+		  	<li class="span4">
+				<div class="thumbnail">
+					<h2>The Sims</h2>
+					<img src="{{ STATIC_URL }}imagens/Pingu/feliz" width="200"/>
+					<p>Monte a casinha do seu Guidu, compre móveis e itens e personalize do seu jeito! Leve seu Guidu pra passear em parques, florestas, até em clubes! Deixe seu Guidu se divertindo com os Guidus de outros usuários enquanto você se diverte conhecendo muita gente online!</p>
+					<p><a class="btn" href="#">Ver detalhes &raquo;</a></p>
+				</div>
 
-      <hr>
+		  	</li>
+		  	<li class="span4">
+		        <div class="thumbnail">
+		          <h2>Pokémon</h2>
+		          <img src="{{ STATIC_URL }}imagens/Liko/feliz" width="300"/>
+		          <p>Crie e eduque seu Guidu com carinho enquanto ensina truques e golpes de pokémons de verdade! Participe de torneios, ganhe insígneas, evolua seu Guidu e torne-se o líder do mundo Guidamon!</p>
+		          <p><a class="btn" href="#">View details &raquo;</a></p>
+		        </div>
+
+		  	</li>
+		</ul>
+
+
+		<div id="myCarousel" class="carousel slide">
+		  <!-- Carousel items -->
+		  <div class="carousel-inner">
+		    <div class="active item">
+		    	<img src="{{ STATIC_URL }}imagens/raros/zapdos.png"/>
+		    	<div class="carousel-caption">
+                    <h4>First Thumbnail label</h4>
+                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                </div>
+            </div>
+
+		    <div class="item">
+		    	<a href="http://www.google.com.br"><img src="{{ STATIC_URL }}imagens/raros/zapdos.png"/> </a>
+		    	<div class="carousel-caption">
+                    <h4>First Thumbnail label</h4>
+                </div>
+		    </div>
+		  </div>
+		  <!-- Carousel nav -->
+		  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+		  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+		</divd>
+      
+
 
       <footer>
         <p>&copy; by Diego Phoenix</p>
