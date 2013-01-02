@@ -21,12 +21,12 @@ class Guidu(models.Model):
 
     nome = models.CharField(max_length=50, null=False)
 
-    fome = models.PositiveSmallIntegerField(default=random.randint(2,8))
+    fome = models.PositiveSmallIntegerField(default=2)
     higiene = models.PositiveSmallIntegerField(default=random.randint(2,8))
     diversao = models.PositiveSmallIntegerField(default=random.randint(2,8))
     banheiro = models.PositiveSmallIntegerField(default=random.randint(2,8))
     social = models.PositiveSmallIntegerField(default=random.randint(2,8))
-    energia = models.PositiveSmallIntegerField(default=random.randint(2,8))
+    energia = models.PositiveSmallIntegerField(default=10)
 
     fome_update = models.DateTimeField(auto_now_add=True)
     higiene_update = models.DateTimeField(auto_now_add=True)
@@ -36,22 +36,33 @@ class Guidu(models.Model):
     energia_update = models.DateTimeField(auto_now_add=True)
 
     esta_dormindo = models.BooleanField(default=False)
+    esta_morto = models.BooleanField(default=False)
 
     data_nascimento = models.DateTimeField(auto_now_add=True)
 
+    humor_update = models.DateTimeField(auto_now_add=True)
     humor = models.CharField(max_length=50, default="normal")
     
+    def get_periodo_acordado(self):
+        return {'periodo_fome':1080, 'periodo_higiene':2160, 
+                'periodo_diversao':720, 'periodo_banheiro':1080, 
+                'periodo_social':1080, 'periodo_energia':5760}
+    def get_periodo_dormindo(self):
+        return  {'periodo_fome':2880, 'periodo_higiene':2880, 
+                'periodo_diversao':5760, 'periodo_banheiro':2880, 
+                'periodo_social':5760, 'periodo_energia':2880}
+
 
     def refresh(self):
+        
+        self.calcular_humor() #calcula humor de agora
+        self.verificar_morte() #verifica se esta morto
+        
         #pega a hora atual
         agora = datetime.datetime.now(pytz.timezone('America/Recife'))
-        periodos_acordado = {'periodo_fome':1080, 'periodo_higiene':2160, 
-                             'periodo_diversao':720, 'periodo_banheiro':1080, 
-                             'periodo_social':1080, 'periodo_energia':5760}
-        periodos_dormindo = {'periodo_fome':2880, 'periodo_higiene':2880, 
-                             'periodo_diversao':5760, 'periodo_banheiro':2880, 
-                             'periodo_social':5760, 'periodo_energia':2880}
-
+        periodos_acordado = self.get_periodo_acordado()
+        periodos_dormindo = self.get_periodo_dormindo()
+       
         # Fome
         if self.fome > 0:
             tempo = agora - self.fome_update
@@ -183,10 +194,12 @@ class Guidu(models.Model):
                     if self.energia < 0:
                         self.energia = 0
                     #agora que verificou o ultimo update de hp, atualiza a variavel fome_update
-                    self.fome_update = self.fome_update + datetime.timedelta(seconds=updates*periodos_acordado['periodo_fome'])
+                    self.energia_update = self.energia_update + datetime.timedelta(seconds=updates*periodos_acordado['periodo_energia'])
             else:
                 #se nao existe nenhum update para fazer, atualiza o fome_update
                 self.energia_update = agora
+
+        self.save()
 
     def __unicode__(self):
         return self.nome
@@ -275,19 +288,33 @@ class Guidu(models.Model):
         return funcionou
 
     def calcular_humor(self):
+        
         qntd_atributos = 6
         calc_humor = self.fome + self.higiene + self.diversao + self.banheiro + self.social + self.energia
-        if (calc_humor/qntd_atributos) >= 8:
-            return "feliz"
-        elif (calc_humor/qntd_atributos) < 4 or self.atributo_baixo():
+        
+        if ((calc_humor/qntd_atributos) < 4 or self.atributo_baixo()):
+            if self.humor != "triste":
+                self.humor = "triste"
+                self.humor_update = datetime.datetime.now(pytz.timezone('America/Recife'))
+                self.save()
             return "triste"
+        elif (calc_humor/qntd_atributos) >= 8:
+            if self.humor != "feliz":
+                self.humor = "feliz"
+                self.humor_update = datetime.datetime.now(pytz.timezone('America/Recife'))
+                self.save()
+            return "feliz"
         else:
+            if self.humor != "normal":
+                self.humor = "normal"
+                self.humor_update = datetime.datetime.now(pytz.timezone('America/Recife'))
+                self.save()
             return "normal"
 
     def atributo_baixo(self):
         baixo = 2
         tem_baixo = False
-        if self.humor <= baixo or self.higiene <= baixo or self.diversao <= baixo or self.banheiro <= baixo or self.social <= baixo or self.energia<= baixo:
+        if self.fome <= baixo or self.higiene <= baixo or self.diversao <= baixo or self.banheiro <= baixo or self.social <= baixo or self.energia<= baixo:
             tem_baixo = True
         return tem_baixo
 
@@ -310,3 +337,75 @@ class Guidu(models.Model):
             self.save()
             funcionou = True
         return funcionou
+
+    def verificar_morte(self):
+        if self.humor == "triste":
+            agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+            dias_de_tristeza = (agora - self.humor_update).days
+            if dias_de_tristeza >= 1:
+                self.esta_morto = True
+                self.save()
+        return self.esta_morto
+
+    def qnto_falta_fome(self):
+        self.refresh()
+        agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+        if self.esta_dormindo:
+            periodo = self.get_periodo_dormindo()
+        else:
+            periodo = self.get_periodo_acordado()
+        return ((self.fome_update + datetime.timedelta(seconds=periodo['periodo_fome'])) - agora).seconds
+
+    def qnto_falta_higiene(self):
+        self.refresh()
+        agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+        if self.esta_dormindo:
+            periodo = self.get_periodo_dormindo()
+        else:
+            periodo = self.get_periodo_acordado()
+        return ((self.higiene_update + datetime.timedelta(seconds=periodo['periodo_higiene'])) - agora).seconds
+
+    def qnto_falta_diversao(self):
+        self.refresh()
+        agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+        if self.esta_dormindo:
+            periodo = self.get_periodo_dormindo()
+        else:
+            periodo = self.get_periodo_acordado()
+        return ((self.diversao_update + datetime.timedelta(seconds=periodo['periodo_diversao'])) - agora).seconds
+
+    def qnto_falta_banheiro(self):
+        self.refresh()
+        agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+        if self.esta_dormindo:
+            periodo = self.get_periodo_dormindo()
+        else:   
+            periodo = self.get_periodo_acordado()
+        return ((self.banheiro_update + datetime.timedelta(seconds=periodo['periodo_banheiro'])) - agora).seconds
+
+    def qnto_falta_social(self):
+        self.refresh()
+        agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+        if self.esta_dormindo:
+            periodo = self.get_periodo_dormindo()
+        else:
+            periodo = self.get_periodo_acordado()
+        return ((self.social_update + datetime.timedelta(seconds=periodo['periodo_social'])) - agora).seconds
+
+    def qnto_falta_energia(self):
+        self.refresh()
+        agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+        if self.esta_dormindo:
+            periodo = self.get_periodo_dormindo()
+        else:
+            periodo = self.get_periodo_acordado()
+        return ((self.energia_update + datetime.timedelta(seconds=periodo['periodo_energia'])) - agora).seconds
+
+def define_humor_inicial(sender, instance, created, **kwargs):
+    if created:
+        instance.humor = instance.calcular_humor()
+
+models.signals.post_save.connect(define_humor_inicial, sender=Guidu) 
+
+
+            

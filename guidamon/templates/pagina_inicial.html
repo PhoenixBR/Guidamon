@@ -1,0 +1,46 @@
+{% extends "logar.html" %}
+
+
+{% block conteudo %}
+<div class="container">
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+        <h1>Bem vindo ao mundo Guidamon!</h1>
+        <p>Adote um Guidu, cuide, eduque e o faça feliz! Treine seu Guidu e mostre seus ensinamentos para ganhar insígneas a medida que ele vai evoluindo e aprendendo novos truques e golpes!</p>
+        <p> Participe VOCÊ também dessa louca e emocionante mistura de Pokémon, The Sims e Tamagotchi!</p>
+
+        <p><a class="btn btn-primary btn-large" href="{% url pagina_de_cadastro %}">Cadastre-se aqui! &raquo;</a></p>
+
+      </div>
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span4">
+          <h2>Tamagotchi</h2>
+          <p><img src="{{ STATIC_URL }}imagens/Kuma	/feliz" width="250"/></p>
+          <p>Adote um Guidu, alimente, dê banho, divirta-o e bote pra dormir quando estiver cansado. Veja ele crescer forte e saudável. Só depende de você!</p>
+          <p><a class="btn" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="span4">
+          <h2>The Sims</h2>
+          <p><img src="{{ STATIC_URL }}imagens/Pingu/feliz" width="250"/></p>
+          <p>Monte a casinha do seu Guidu, compre móveis e itens e personalize do seu jeito! Leve seu Guidu pra passear em parques, florestas, até em clubes! Deixe seu Guidu se divertindo com os Guidus de outros usuários enquanto você se diverte conhecendo muita gente online!</p>
+          <p><a class="btn" href="#">View details &raquo;</a></p>
+       </div>
+        <div class="span4">
+          <h2>Pokémon</h2>
+          <p><img src="{{ STATIC_URL }}imagens/Liko/feliz" width="250"/></p>
+          <p>Crie e eduque seu Guidu com carinho enquanto ensina truques e golpes de pokémons de verdade! Participe de torneios, ganhe insígneas, evolua seu Guidu e torne-se o líder do mundo Guidamon!</p>
+          <p><a class="btn" href="#">View details &raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; by Diego Phoenix</p>
+      </footer>
+
+    </div> <!-- /container -->
+{% endblock %}

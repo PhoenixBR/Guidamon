@@ -17,7 +17,7 @@ class Jogador(models.Model):
 
     def refresh(self):
     	agora = datetime.datetime.now(pytz.timezone('America/Recife'))
-        periodo = 120 #2min
+        periodo = self.get_periodo()
 
         if self.guimoves < 10:
             tempo = agora - self.update_guimoves
@@ -34,10 +34,21 @@ class Jogador(models.Model):
             #se nao existe nenhum update para fazer, atualiza o fome_update
             self.update_guimoves = agora
 
+        self.save()
+
         
 
     def __unicode__(self):
         return self.user.username
+
+    def qnto_falta_acao(self):
+        self.refresh()
+        agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+        periodo = self.get_periodo()
+        return ((self.update_guimoves + datetime.timedelta(seconds=periodo)) - agora).seconds
+
+    def get_periodo(self):
+        return 120
 
 def cria_user_jogador(sender, instance, created, **kwargs):
     if created:

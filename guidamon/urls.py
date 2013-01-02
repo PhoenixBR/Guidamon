@@ -7,15 +7,15 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$','views.site.index', name='pagina_inicial'),
+    url(r'^$','views.site.index', name='pagina_index'),
     url(r'^adocao/$','views.site.adocao', name='pagina_de_adocao'),
     url(r'^adotar/(\d+)/$','views.site.adotar'),
     url(r'^lista_guidus','views.site.lista_guidus', name='pagina_da_lista'),
     url(r'^login/$',"django.contrib.auth.views.login", 
-        {"template_name": "logar.html"}),
+        {"template_name": "pagina_inicial.html"}),
     url(r'^logout/', "django.contrib.auth.views.logout_then_login", 
                                 {"login_url": '/login/'}),
-    url(r'^cadastrar/$', 'views.site.cadastrar', name='pagina_de_registro'),
+    url(r'^cadastrar/$', 'views.site.cadastrar', name='pagina_de_cadastro'),
 
     
     url(r'^(\d+)/alimentar/(\d+)/$','views.site.alimentar'),
@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^(\d+)/socializar/(\d+)/$','views.site.socializar'),
     url(r'^(\d+)/dormir/$','views.site.dormir'),
     url(r'^(\d+)/acordar/$','views.site.acordar'),
+    url(r'^(\d+)/enterrar_guidu/$','views.site.enterrar_guidu'),
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

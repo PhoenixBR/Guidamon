@@ -1,18 +1,17 @@
 {% extends "base.html" %}
-{% csrf_token %}
 
-{% block conteudo %}
+{% block bt_cadastrar %}
+{% endblock %}
 
-<form method="POST">
-    {% csrf_token %}
-     
-    <table>
-    	<tr><td>{{ form.username.label_tag }}</td><td>{{ form.username }}</td></tr>
-    	<tr><td>{{ form.password.label_tag }}</td><td>{{ form.password }}</td></tr>
-    	<tr><td><input type='submit' value='Logar' /></td><td><a href="/cadastrar/">Cadastrar</a></td></tr>
-    </table>
-
-     
-   </form>
-
+{% block login%}
+	<form method="POST" class="navbar-form pull-right">
+	    {%csrf_token%}
+		<ul class="nav">
+			<li><a href="{% url pagina_de_cadastro %}">Cadastrar</a></li>
+	    <input class="span2" type="text" placeholder="Usuário" name="username">
+	    <input class="span2" type="password" placeholder="Senha" name="password">
+	    <button type="submit" class="btn">Logar</button>
+		</ul>
+		
+	</form>
 {% endblock %}

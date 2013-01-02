@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "logado.html" %}
 {% load staticfiles %}
 {% csrf_token %}
 
@@ -12,64 +12,131 @@ window.onload = function(){
 <!--<img src="{% static 'imagens/zapdos.png' %}" />-->
 
 {% for guidu in guidus %}
-	<h1> {{ guidu.nome }}</h1>
-	<table>
-		<tr>
-			<td>
-				{% if guidu.calcular_humor == "feliz" %} 
-					<img src="{{ STATIC_URL }}imagens/{{guidu.tipo.nome_tipo}}/feliz" width="250"/>
-				{% elif guidu.calcular_humor == "triste" %}
+
+{% if guidu.esta_morto %}
+
+
+
+		<p> Seu Guidu {{guidu.nome}} morreu! :( </p>
+		<a href="/{{guidu.id}}/enterrar_guidu/">Enterrar {{guidu.nome}}</a>
+
+
+{% else %}
+	
+<h1> {{ guidu.nome }}</h1>
+
+<div class="container" style="margin-bottom: 20px;">
+
+	<div class="row">
+		<div class='span3'>
+				{% if guidu.calcular_humor == "normal" %} 
+					<img src="{{ STATIC_URL }}imagens/{{guidu.tipo.nome_tipo}}/normal" width="250"/>
+				{% elif guidu.calcular_humor == "triste"%}
 					<img src="{{ STATIC_URL }}imagens/{{guidu.tipo.nome_tipo}}/triste" width="250"/>
 				{% else %}
-					<img src="{{ STATIC_URL }}imagens/{{guidu.tipo.nome_tipo}}/normal" width="250"/>
+					<img src="{{ STATIC_URL }}imagens/{{guidu.tipo.nome_tipo}}/feliz" width="250"/>
 				{% endif %}
-			</td>
-			<td><table>
-				<tr><td><br> Idade: {{guidu.saber_idade_dias}} dia(s)</td></tr>
-				<tr><td>Fome: {{guidu.fome}} </td></tr>
-				<tr><td>Higiene: {{guidu.higiene}} </td></tr>
-				<tr><td>Diversao: {{guidu.diversao}} </td></tr>
-				<tr><td>Banheiro: {{guidu.banheiro}} </td></tr>
-				<tr><td>Social: {{guidu.social}} </td></tr>
-				<tr><td>Energia: {{guidu.energia}} </td></tr>	
-				<tr><td><br>Pontos de Ação: {{jogador.guimoves}}</td></tr>
-				</table>
-			</td>
-		</tr>
-	</table>
+		</div>
+
+                    
+                    <!--barra de hp-->
+                    
+           
+         <div class="span2">  		
+                    	<p>{{guidu.humor}}: {{guidu.humor_update}}</p>
+
+
+                        Fome: <strong>{{guidu.fome}}</strong> 
+                        {% if guidu.fome > 0 %} (-1 em {{guidu.qnto_falta_fome}}s) {% endif %}
+                        <div class="progress progress-striped active">
+                            <div class="bar bar-success" style="width: {% widthratio guidu.fome 10 100 %}%;"></div>
+                        </div>
+                	
+                        Banheiro: <strong>{{guidu.banheiro}}</strong> 
+                        {% if guidu.banheiro > 0 %} (-1 em {{guidu.qnto_falta_banheiro}}s) {% endif %}
+                        <div class="progress progress-striped active">
+                            <div class="bar bar-success" style="width: {% widthratio guidu.banheiro 10 100 %}%;"></div>
+                        </div>
+
+                        Higiene: <strong>{{guidu.higiene}}</strong> 
+                        {% if guidu.higiene > 0 %} (-1 em {{guidu.qnto_falta_higiene}}s) {% endif %}
+                        <div class="progress progress-striped active">
+                            <div class="bar bar-success" style="width: {% widthratio guidu.higiene 10 100 %}%;"></div>
+                        </div>
+
+                        Diversão: <strong>{{guidu.diversao}}</strong> 
+                        {% if guidu.diversao > 0 %} (-1 em {{guidu.qnto_falta_diversao}}s) {% endif %}
+                        <div class="progress progress-striped active">
+                            <div class="bar bar-success" style="width: {% widthratio guidu.diversao 10 100 %}%;"></div>
+                        </div>
+
+                        Social: <strong>{{guidu.social}}</strong> 
+                        {% if guidu.social > 0 %} (-1 em {{guidu.qnto_falta_social}}s) {% endif %}
+                        <div class="progress progress-striped active">
+                            <div class="bar bar-success" style="width: {% widthratio guidu.social 10 100 %}%;"></div>
+                        </div>
+
+                        Energia: <strong>{{guidu.energia}}</strong> 
+                        {% if guidu.energia > 0 %}
+                        	{% if guidu.esta_dormindo %} (+1 em {{guidu.qnto_falta_energia}}s)
+                        	{% else %} (-1 em {{guidu.qnto_falta_energia}}s)
+                        	{% endif %}
+                        {% endif %}
+                        <div class="progress progress-striped active">
+                            <div class="bar bar-success" style="width: {% widthratio guidu.energia 10 100 %}%;"></div>
+                        </div>
+
+                        Pontos de Ação: <strong>{{jogador.guimoves}}</strong>  
+                        {% if jogador.guimoves < 10 %} (+1 em {{jogador.qnto_falta_acao}}s) {% endif %}
+                        <div class="progress progress-striped active">
+                            <div class="bar bar-success" style="width: {% widthratio jogador.guimoves 10 100 %}%;"></div>
+                        </div>
+                    	
+			
+        
+         </div>           
+                    
+                </div><!--/span10-->
+                </div>
+
+
+
+
+
+
 	<table>
 		<tr>
 			<td>
 				<table border="3"> Fome
-				<tr><td><a href="/{{guidu.id}}/alimentar/1">Dar maçã</a> (Fome: +1) </td></tr>
-				<tr><td><a href="/{{guidu.id}}/alimentar/2">Dar torrada</a> (Fome: +2, Banheiro: -1)</td></tr>
+				<tr><td><a href="/{{guidu.id}}/alimentar/1" class="btn btn-info">Dar maçã </a> (Fome: +1) </td></tr>
+				<tr><td><a href="/{{guidu.id}}/alimentar/2" class="btn btn-info">Dar torrada</a> (Fome: +2, Banheiro: -1)</td></tr>
 				</table>
 			</td>
 			<td>
 				<table border="3"> Banheiro
-				<tr><td><a href="/{{guidu.id}}/banheiro/1">Ir ao banheiro</a> Banheiro: +3, Higiente: -1</td></tr>
+				<tr><td><a href="/{{guidu.id}}/banheiro/1" class="btn btn-info">Ir ao banheiro</a> Banheiro: +3, Higiente: -1</td></tr>
 				</table>
 			</td>
 			<td>
 				<table border="3"> Higiene
-				<tr><td><a href="/{{guidu.id}}/banhar/1">Tomar uma ducha</a> Higiene: +4</td></tr>
+				<tr><td><a href="/{{guidu.id}}/banhar/1" class="btn btn-info">Tomar uma ducha</a> Higiene: +4</td></tr>
 				</table>
 			</td>
 			<td>
 				<table border="3"> Diversão
-				<tr><td><a href="/{{guidu.id}}/divertir/1">Brincar</a> Diversão: +3</td></tr>
+				<tr><td><a href="/{{guidu.id}}/divertir/1" class="btn btn-info">Brincar</a> Diversão: +3</td></tr>
 				</table>
 			</td>
 			<td>
 				<table border="3"> Social
-				<tr><td><a href="/{{guidu.id}}/socializar/1">Amiguinhos</a> Social: +7</td></tr>
+				<tr><td><a href="/{{guidu.id}}/socializar/1" class="btn btn-info">Amiguinhos</a> Social: +7</td></tr>
 				</table>
 			</td>
 			<td>
 				<table border="3"> Energia
 				<tr><td>
-					{% if guidu.esta_dormindo %} <a href="/{{guidu.id}}/acordar">Acordar</a>
-					{% else %} <a href="/{{guidu.id}}/dormir">Colocar pra dormir</a>
+					{% if guidu.esta_dormindo %} <a href="/{{guidu.id}}/acordar" class="btn btn-info">Acordar</a>
+					{% else %} <a href="/{{guidu.id}}/dormir" class="btn btn-info">Colocar pra dormir</a>
 					{% endif %}
 				</td></tr>
 				</table>
@@ -77,6 +144,8 @@ window.onload = function(){
 		</tr>
 	</table>
 	
+{% endif %}
+
 {% endfor %}
 
 {% endblock %}
