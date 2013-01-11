@@ -3,9 +3,14 @@
 {% block conteudo %}
 
 <table border='1'> <h1>Top Guidus mais velhos</h1>
-	<tr><td>Nome do Guidu</td><td>Idade</td><td>Jogador</td><td>Raça</td></tr>
+	<tr><td>Nome do Guidu</td><td>Idade</td><td>Jogador</td><td>Raça</td><td>Status</td></tr>
 	{% for guidu in guidus.all %}
         <tr><td> {{guidu.nome}}</td><td>{{guidu.saber_idade_dias}}</td><td>{{guidu.jogador.user.username}}</td><td>{{guidu.tipo.nome_tipo}}</td></tr>
+        <td>
+        {% if guidu.esta_morto %} morto
+        {% else %} {{guidu.humor_update}}
+        {% endif %}
+        </td>
     {%  endfor %}
 </table>
 

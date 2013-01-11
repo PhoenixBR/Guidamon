@@ -135,7 +135,8 @@ def acordar(request, id_guidu):
 @login_required
 def lista_guidus(request):
     jogador = request.user.get_profile()
-    guidus = Guidu.objects.filter(esta_morto=False).order_by('data_nascimento')
+    #guidus = Guidu.objects.filter(esta_morto=False).order_by('data_nascimento')
+    guidus = Guidu.objects.all().order_by('data_nascimento')
     return render_to_response("lista_guidus.html", {'guidus':guidus, "jogador": jogador})
 
 

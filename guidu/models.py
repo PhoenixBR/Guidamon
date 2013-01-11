@@ -199,7 +199,9 @@ class Guidu(models.Model):
                 #se nao existe nenhum update para fazer, atualiza o fome_update
                 self.energia_update = agora
 
-        self.save()
+        self.calcular_humor() #calcula humor de agora
+        #self.save() #ja tem save no calcular_humor()
+
 
     def __unicode__(self):
         return self.nome
@@ -295,19 +297,19 @@ class Guidu(models.Model):
         if ((calc_humor/qntd_atributos) < 4 or self.atributo_baixo()):
             if self.humor != "triste":
                 self.humor = "triste"
-                self.humor_update = datetime.datetime.now(pytz.timezone('America/Recife'))
+                self.humor_update = datetime.datetime.now(pytz.timezone(u'America/Recife'))
                 self.save()
             return "triste"
         elif (calc_humor/qntd_atributos) >= 8:
             if self.humor != "feliz":
                 self.humor = "feliz"
-                self.humor_update = datetime.datetime.now(pytz.timezone('America/Recife'))
+                self.humor_update = datetime.datetime.now(pytz.timezone(u'America/Recife'))
                 self.save()
             return "feliz"
         else:
             if self.humor != "normal":
                 self.humor = "normal"
-                self.humor_update = datetime.datetime.now(pytz.timezone('America/Recife'))
+                self.humor_update = datetime.datetime.now(pytz.timezone(u'America/Recife'))
                 self.save()
             return "normal"
 
@@ -404,6 +406,11 @@ class Guidu(models.Model):
 def define_humor_inicial(sender, instance, created, **kwargs):
     if created:
         instance.humor = instance.calcular_humor()
+        '''instance.humor_update = datetime.datetime.now(pytz.timezone('America/Recife')) 
+        instance.humor_update = instance.humor_update.astimezone(pytz.timezone('America/Recife'))
+        instance.save()
+        print instance.humor_update'''
+
 
 models.signals.post_save.connect(define_humor_inicial, sender=Guidu) 
 
