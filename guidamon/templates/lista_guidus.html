@@ -5,13 +5,14 @@
 <table border='1'> <h1>Top Guidus mais velhos</h1>
 	<tr><td>Nome do Guidu</td><td>Idade</td><td>Jogador</td><td>Raça</td><td>Status</td></tr>
 	{% for guidu in guidus.all %}
-        <tr><td> {{guidu.nome}}</td><td>{{guidu.saber_idade_dias}}</td><td>{{guidu.jogador.user.username}}</td><td>{{guidu.tipo.nome_tipo}}</td></tr>
+        <tr><td> {{guidu.nome}}</td><td>{{guidu.saber_idade_dias}}</td><td>{{guidu.jogador.user.username}}</td><td>{{guidu.tipo.nome_tipo}}</td>
         <td>
         {% if guidu.esta_morto %} morto
-        {% else %} {{guidu.humor_update}}
+        {% else %} {{guidu.humor}}
         {% endif %}
         </td>
     {%  endfor %}
+   		</tr>
 </table>
 
 {% endblock %}
