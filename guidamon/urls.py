@@ -6,7 +6,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
+    
     url(r'^$','views.site.index', name='pagina_index'),
     url(r'^adocao/$','views.site.adocao', name='pagina_de_adocao'),
     url(r'^adotar/(\d+)/$','views.site.adotar'),
@@ -31,6 +31,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    
 )
 
 

@@ -5,7 +5,6 @@ import datetime
 import pytz
 import random
 
-
 class GuiduTipo(models.Model):
 
     nome_tipo = models.CharField(max_length=50)
@@ -42,6 +41,7 @@ class Guidu(models.Model):
 
     humor_update = models.DateTimeField(auto_now_add=True)
     humor = models.CharField(max_length=50, default="normal")
+    humor_guicoin = models.PositiveIntegerField(default=0)
     
     def get_periodo_acordado(self):
         return {'periodo_fome':1080, 'periodo_higiene':2160, 
@@ -55,7 +55,9 @@ class Guidu(models.Model):
 
     def refresh(self):
         
-        self.calcular_humor() #calcula humor de agora
+        print "refresh"
+        self.adiciona_moedas() #adiciona moedas antes de possivelmente alterar humor
+        self.calcular_humor() #calcula humor de agora antes de verificar morte pq vai que o guidu melhorou...
         self.verificar_morte() #verifica se esta morto
         
         #pega a hora atual
@@ -199,9 +201,9 @@ class Guidu(models.Model):
                 #se nao existe nenhum update para fazer, atualiza o fome_update
                 self.energia_update = agora
 
-        self.calcular_humor() #calcula humor de agora
-        #self.save() #ja tem save no calcular_humor()
 
+        self.calcular_humor() #calcula humor denovo pra saber se alterou depois das mudancas.
+        self.save() 
 
     def __unicode__(self):
         return self.nome
@@ -218,7 +220,7 @@ class Guidu(models.Model):
 
     def alimentar(self, alimento):
 
-        self.refresh()
+        self.refresh() #da refresh antes pra pegar o estado mais atual do guidu
         funcionou = False
         if self.fome <10 and (not self.esta_dormindo):
             if(alimento == '1'):
@@ -298,18 +300,21 @@ class Guidu(models.Model):
             if self.humor != "triste":
                 self.humor = "triste"
                 self.humor_update = datetime.datetime.now(pytz.timezone(u'America/Recife'))
+                self.humor_guicoin = 0
                 self.save()
             return "triste"
         elif (calc_humor/qntd_atributos) >= 8:
             if self.humor != "feliz":
                 self.humor = "feliz"
                 self.humor_update = datetime.datetime.now(pytz.timezone(u'America/Recife'))
+                self.humor_guicoin = 0
                 self.save()
             return "feliz"
         else:
             if self.humor != "normal":
                 self.humor = "normal"
                 self.humor_update = datetime.datetime.now(pytz.timezone(u'America/Recife'))
+                self.humor_guicoin = 0
                 self.save()
             return "normal"
 
@@ -350,58 +355,90 @@ class Guidu(models.Model):
         return self.esta_morto
 
     def qnto_falta_fome(self):
-        self.refresh()
+        
+        #self.refresh() #esse refresh pode ser tirado se prometer ser logo depois de carregar a pagina (e dar refresh)
         agora = datetime.datetime.now(pytz.timezone('America/Recife'))
         if self.esta_dormindo:
             periodo = self.get_periodo_dormindo()
         else:
             periodo = self.get_periodo_acordado()
-        return ((self.fome_update + datetime.timedelta(seconds=periodo['periodo_fome'])) - agora).seconds
+        timedelta = ((self.fome_update + datetime.timedelta(seconds=periodo['periodo_fome'])) - agora)
+        return str(datetime.timedelta(seconds=timedelta.seconds)) #o tempo sai no formato hh:mm:ss
 
     def qnto_falta_higiene(self):
-        self.refresh()
+        
+        #self.refresh() #esse refresh pode ser tirado se prometer ser logo depois de carregar a pagina (e dar refresh)
         agora = datetime.datetime.now(pytz.timezone('America/Recife'))
         if self.esta_dormindo:
             periodo = self.get_periodo_dormindo()
         else:
             periodo = self.get_periodo_acordado()
-        return ((self.higiene_update + datetime.timedelta(seconds=periodo['periodo_higiene'])) - agora).seconds
+        timedelta = ((self.higiene_update + datetime.timedelta(seconds=periodo['periodo_higiene'])) - agora)
+        return str(datetime.timedelta(seconds=timedelta.seconds)) #o tempo sai no formato hh:mm:ss
 
     def qnto_falta_diversao(self):
-        self.refresh()
+        
+        #self.refresh() #esse refresh pode ser tirado se prometer ser logo depois de carregar a pagina (e dar refresh)
         agora = datetime.datetime.now(pytz.timezone('America/Recife'))
         if self.esta_dormindo:
             periodo = self.get_periodo_dormindo()
         else:
             periodo = self.get_periodo_acordado()
-        return ((self.diversao_update + datetime.timedelta(seconds=periodo['periodo_diversao'])) - agora).seconds
+        timedelta = ((self.diversao_update + datetime.timedelta(seconds=periodo['periodo_diversao'])) - agora)
+        return str(datetime.timedelta(seconds=timedelta.seconds)) #o tempo sai no formato hh:mm:ss
 
     def qnto_falta_banheiro(self):
-        self.refresh()
+         
+        #self.refresh() #esse refresh pode ser tirado se prometer ser logo depois de carregar a pagina (e dar refresh)
         agora = datetime.datetime.now(pytz.timezone('America/Recife'))
         if self.esta_dormindo:
             periodo = self.get_periodo_dormindo()
         else:   
             periodo = self.get_periodo_acordado()
-        return ((self.banheiro_update + datetime.timedelta(seconds=periodo['periodo_banheiro'])) - agora).seconds
+        timedelta = ((self.banheiro_update + datetime.timedelta(seconds=periodo['periodo_banheiro'])) - agora)
+        return str(datetime.timedelta(seconds=timedelta.seconds)) #o tempo sai no formato hh:mm:ss
 
     def qnto_falta_social(self):
-        self.refresh()
+        
+        #self.refresh() #esse refresh pode ser tirado se prometer ser logo depois de carregar a pagina (e dar refresh)
         agora = datetime.datetime.now(pytz.timezone('America/Recife'))
         if self.esta_dormindo:
             periodo = self.get_periodo_dormindo()
         else:
             periodo = self.get_periodo_acordado()
-        return ((self.social_update + datetime.timedelta(seconds=periodo['periodo_social'])) - agora).seconds
+        timedelta = ((self.social_update + datetime.timedelta(seconds=periodo['periodo_social'])) - agora)
+        return str(datetime.timedelta(seconds=timedelta.seconds)) #o tempo sai no formato hh:mm:ss
 
     def qnto_falta_energia(self):
-        self.refresh()
+        
+        #self.refresh() #esse refresh pode ser tirado se prometer ser logo depois de carregar a pagina (e dar refresh)
         agora = datetime.datetime.now(pytz.timezone('America/Recife'))
         if self.esta_dormindo:
             periodo = self.get_periodo_dormindo()
         else:
             periodo = self.get_periodo_acordado()
-        return ((self.energia_update + datetime.timedelta(seconds=periodo['periodo_energia'])) - agora).seconds
+        timedelta = ((self.energia_update + datetime.timedelta(seconds=periodo['periodo_energia'])) - agora)
+        return str(datetime.timedelta(seconds=timedelta.seconds)) #o tempo sai no formato hh:mm:ss
+
+    def adiciona_moedas(self):
+        if(self.humor == 'feliz' or self.humor == 'normal'):
+            periodo = 60 #1 min            
+            agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+            update = (agora - self.humor_update).seconds/periodo
+            if update > 0:
+                if update > self.humor_guicoin:
+                    if self.humor == 'feliz':
+                        moedas = 100
+                    else:
+                        moedas = 50
+                    
+                    self.jogador.guicoin = self.jogador.guicoin + (moedas*(update-self.humor_guicoin))
+                    self.jogador.save()
+                    self.humor_guicoin = update
+                    self.save()
+                    print '============ GuiCoin ===========' + str(self.jogador.guicoin)
+
+
 
 def define_humor_inicial(sender, instance, created, **kwargs):
     if created:

@@ -20,11 +20,14 @@ def index(request):
     user = request.user
     jogador = user.get_profile()
     guidus = jogador.guidus.all()
-    jogador.refresh()
-    jogador.save()
+    #jogador.refresh()
+    
+    #para cada guidu que o jogador tiver, atualiza o guidu, salva no banco e 
     for guidu in guidus:
         guidu.refresh()
         guidu.save()
+        jogador = guidu.jogador
+        print '======= De volta ao site.py =======' + str(guidu.jogador.guicoin)
 
     if guidus:
         return render_to_response("index.html", {"guidus": guidus, "jogador": jogador}, context_instance=RequestContext(request))
@@ -34,7 +37,7 @@ def index(request):
 @login_required
 def adocao(request):
     profile = request.user.get_profile()
-    if profile.guidus.all():
+    if profile.guidus.all():    
         return redirect(index)
     guidutipos = GuiduTipo.objects.all()
     return render_to_response("adocao.html",{'guidutipos':guidutipos, "jogador": profile}, context_instance=RequestContext(request))
