@@ -1,0 +1,39 @@
+{% extends "logado.html" %}
+{% csrf_token %}
+{% load staticfiles %}
+
+{% block conteudo %}
+
+<h1>Coin: {{jogador.guicoin}}</h1>
+{% for livro in livros %}
+
+<div class="container" style="margin-bottom: 50px; margin-left: 50px">
+    <div class="row">
+        <div class='span3'>
+            <div class="page-header" style="text-align: center">
+                <h1>{{livro.nome}}
+                    {% if livro in jogador.livros.all %}
+                        <br><small>Você possui esse livro</small></br>
+                    {% endif %}
+                </h1>
+                
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class='span3'>
+            <a href="/comprar_livro/{{livro.id}}"><img src="{% url pagina_index %}estaticos/{{livro.tipo}}" width="300"/></a>
+        </div>
+        <div class='span3'>
+            {% for golpe in livro.golpe.all %}
+                <p>{{golpe.nome}}</p>
+            {% endfor %}
+        </div>       
+    </div>
+
+</div>
+
+
+{% endfor %}
+
+{% endblock %}

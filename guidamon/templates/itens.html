@@ -1,0 +1,39 @@
+{% extends "logado.html" %}
+
+{% block conteudo %}
+
+<div class="page-header" style="text-align: center">
+	<h1>Livros</h1>
+</div>
+
+{% for livro in jogador.livros.all %}
+<div class="container" style="margin-bottom: 50px; margin-left: 50px">
+    <div class="row">
+        <div class='span3'>
+            <div class="page-header" style="text-align: center">
+                <h1>{{livro.nome}}
+                    
+                </h1>   
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class='span3'>
+            <a href="/comprar_livro/{{livro.id}}"><img src="{% url pagina_index %}estaticos/{{livro.tipo}}" width="300"/></a>
+        </div>
+        <div class='span3'>
+            {% for golpe in livro.golpe.all %}
+                <p>{{golpe.nome}}
+                	<a href="/treinar_guidu/{{ golpe.id }}" class="btn btn-info">Treinar Guidu</a>
+
+                </p>
+            {% endfor %}
+        </div>       
+    </div>
+</div>
+{% endfor %}
+
+
+
+
+{% endblock %}

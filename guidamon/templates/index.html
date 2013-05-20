@@ -38,14 +38,17 @@ window.onload = function(){
                 {% else %}
                     <img src="{{ STATIC_URL }}imagens/{{guidu.tipo.nome_tipo}}/feliz" width="250"/>
                 {% endif %}
+                <a href="{{guidu.id}}/treinar_guidu">Treinar Guidu</a>
                 <!--h1 style="margin-bottom: 20px;"> {{ guidu.nome }}</h1-->
                 
 		</div>
                     
            
         <div class="span2">  		
-                    	<p>Status: <strong>{{guidu.humor}}</strong> 
-                        <br>Coin: {{jogador.guicoin}}</p>
+                    	<p>
+                            Status: <strong>{{guidu.humor}}</strong> <br>
+                            Coin: {{jogador.guicoin}}
+                        </p>
 
 
                         Fome: <strong>{{guidu.fome}}</strong> 

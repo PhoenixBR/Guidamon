@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.template import RequestContext
 
 from guidu.models import GuiduTipo, Guidu
+from golpe.models import Livro
 
 def cadastrar(request):
     if request.method == "POST":
@@ -20,14 +21,15 @@ def index(request):
     user = request.user
     jogador = user.get_profile()
     guidus = jogador.guidus.all()
-    #jogador.refresh()
-    
+    '''jogador.refresh() #nao precisa refrescar o jogador pois toda vez que 
+    index.html eh chamado, chama a funcao qnto_falta_acao, que chama jogador.refresh
+    lembrar de ter cautela ao alterar essa funcao /\ 
+    '''
     #para cada guidu que o jogador tiver, atualiza o guidu, salva no banco e 
     for guidu in guidus:
         guidu.refresh()
         guidu.save()
         jogador = guidu.jogador
-        print '======= De volta ao site.py =======' + str(guidu.jogador.guicoin)
 
     if guidus:
         return render_to_response("index.html", {"guidus": guidus, "jogador": jogador}, context_instance=RequestContext(request))
@@ -57,6 +59,51 @@ def adotar(request, id_guidutipo):
     else:
         return render_to_response("adotar.html", {"jogador": profile}, 
             context_instance=RequestContext(request))
+
+@login_required
+def loja(request):
+    livros = Livro.objects.all()
+    jogador = request.user.get_profile()
+    return render_to_response("loja.html", {"livros":livros, "jogador":jogador})
+
+@login_required
+def comprar_livro(request, id_livro):
+    jogador = request.user.get_profile()
+    livro = get_object_or_404(Livro, pk=id_livro)
+    #return redirect(index)
+    
+    if(jogador.guicoin>=livro.preco):
+        if(livro not in jogador.livros.all()):
+            jogador.livros.add(livro)
+            jogador.guicoin -= livro.preco
+            jogador.save()
+            return render_to_response("livro_comprado.html", {"jogador":jogador}, context_instance=RequestContext(request))
+        else:
+            return redirect(loja)
+    else:
+        return render_to_response("livro_ncomprado.html", {"jogador":jogador}, context_instance=RequestContext(request))
+
+@login_required
+def itens(request):
+    jogador = request.user.get_profile() 
+    return render_to_response("itens.html", {"jogador":jogador})
+
+@login_required
+def treinar_guidu_escolher_golpe(request, id_golpe):
+    jogador = request.user.get_profile()
+    return render_to_response("treinar_guidu.html", {"jogador":jogador}, 
+                                context_instance=RequestContext(request))
+
+@login_required
+def treinar_guidu(request, id_guidu, id_golpe):
+    jogador = request.user.get_profile()
+    guidu = Guidu.objects.get_object_or_404(pk=id_guidu, jogador=jogador)
+    #verificar se já treinou esse golpe
+    #verificar se os slots de 5 golpes estão cheios
+    #verificar se tem guimoves
+    #verificar se já está treinando outro golpe ou mesmo esse 
+
+
 
 @login_required
 def alimentar(request, id_guidu, id_alimento):
@@ -152,4 +199,4 @@ def enterrar_guidu(request, id_guidu):
     return redirect(index)
 
 
-#verificar se nao eh o caso de colocar jogador.refresh() antes de todas as acoes.
+#verificar se nao eh o caso de colocar jogador.refres antes de todas as acoes.

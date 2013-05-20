@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from golpe.models import Livro
 
 import datetime
 import pytz
@@ -12,6 +13,7 @@ class Jogador(models.Model):
 
     guicoin = models.PositiveIntegerField(default=0)
     guimoves = models.PositiveSmallIntegerField(default=10)
+    livros = models.ManyToManyField(Livro, blank=True)
 
     update_guimoves = models.DateTimeField(auto_now_add=True)
 

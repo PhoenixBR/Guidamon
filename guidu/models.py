@@ -428,9 +428,9 @@ class Guidu(models.Model):
             if update > 0:
                 if update > self.humor_guicoin:
                     if self.humor == 'feliz':
-                        moedas = 100
+                        moedas = 10
                     else:
-                        moedas = 50
+                        moedas = 5
                     
                     self.jogador.guicoin = self.jogador.guicoin + (moedas*(update-self.humor_guicoin))
                     self.jogador.save()
