@@ -38,99 +38,127 @@ window.onload = function(){
                 {% else %}
                     <img src="{{ STATIC_URL }}imagens/{{guidu.tipo.nome_tipo}}/feliz" width="250"/>
                 {% endif %}
-                <a href="{{guidu.id}}/treinar_guidu">Treinar Guidu</a>
+                
                 <!--h1 style="margin-bottom: 20px;"> {{ guidu.nome }}</h1-->
                 
 		</div>
                     
            
         <div class="span2">  		
-                    	<p>
-                            Status: <strong>{{guidu.humor}}</strong> <br>
-                            Coin: {{jogador.guicoin}}
-                        </p>
+        	<p>
+                Status: <strong>{{guidu.humor}}</strong> <br>
+                Guicoins: {{jogador.guicoin}}
+            </p>
 
 
-                        Fome: <strong>{{guidu.fome}}</strong> 
-                        {% if guidu.fome > 0 %} <br>(-1 em {{guidu.qnto_falta_fome}}s) {% endif %}
-                        <div class="progress progress-striped active">
-                            {% if guidu.fome >= 8%}<div class="bar bar-success" style="width: {% widthratio guidu.fome 10 100 %}%;"></div>
-                            {% elif guidu.fome < 8 and guidu.fome >= 5 %} <div class="bar bar-info" style="width: {% widthratio guidu.fome 10 100 %}%;"></div>
-                            {% elif guidu.fome < 5 and guidu.fome > 2 %} <div class="bar bar-warning" style="width: {% widthratio guidu.fome 10 100 %}%;"></div>
-                            {% else %} <div class="bar bar-danger" style="width: {% widthratio guidu.fome 10 100 %}%;"></div>
-                            {%endif%}
+            Fome: <strong>{{guidu.fome}}</strong> 
+            {% if guidu.fome > 0 %} <br>(-1 em {{guidu.qnto_falta_fome}}s) {% endif %}
+            <div class="progress progress-striped active">
+                {% if guidu.fome >= 8%}<div class="bar bar-success" style="width: {% widthratio guidu.fome 10 100 %}%;"></div>
+                {% elif guidu.fome < 8 and guidu.fome >= 5 %} <div class="bar bar-info" style="width: {% widthratio guidu.fome 10 100 %}%;"></div>
+                {% elif guidu.fome < 5 and guidu.fome > 2 %} <div class="bar bar-warning" style="width: {% widthratio guidu.fome 10 100 %}%;"></div>
+                {% else %} <div class="bar bar-danger" style="width: {% widthratio guidu.fome 10 100 %}%;"></div>
+                {%endif%}
 
-                        </div>
-                	
-                        Banheiro: <strong>{{guidu.banheiro}}</strong> 
-                        {% if guidu.banheiro > 0 %} <br>(-1 em {{guidu.qnto_falta_banheiro}}s) {% endif %}
-                        <div class="progress progress-striped active">
-                            {% if guidu.banheiro >= 8 %}<div class="bar bar-success" style="width: {% widthratio guidu.banheiro 10 100 %}%;"></div>
-                            {% elif guidu.banheiro < 8 and guidu.banheiro >= 5 %} <div class="bar bar-info" style="width: {% widthratio guidu.banheiro 10 100 %}%;"></div>
-                            {% elif guidu.banheiro < 5 and guidu.banheiro > 2 %} <div class="bar bar-warning" style="width: {% widthratio guidu.banheiro 10 100 %}%;"></div>
-                            {% else %} <div class="bar bar-danger" style="width: {% widthratio guidu.banheiro 10 100 %}%;"></div>
-                            {% endif %}
-                        </div>
+            </div>
+    	
+            Banheiro: <strong>{{guidu.banheiro}}</strong> 
+            {% if guidu.banheiro > 0 %} <br>(-1 em {{guidu.qnto_falta_banheiro}}s) {% endif %}
+            <div class="progress progress-striped active">
+                {% if guidu.banheiro >= 8 %}<div class="bar bar-success" style="width: {% widthratio guidu.banheiro 10 100 %}%;"></div>
+                {% elif guidu.banheiro < 8 and guidu.banheiro >= 5 %} <div class="bar bar-info" style="width: {% widthratio guidu.banheiro 10 100 %}%;"></div>
+                {% elif guidu.banheiro < 5 and guidu.banheiro > 2 %} <div class="bar bar-warning" style="width: {% widthratio guidu.banheiro 10 100 %}%;"></div>
+                {% else %} <div class="bar bar-danger" style="width: {% widthratio guidu.banheiro 10 100 %}%;"></div>
+                {% endif %}
+            </div>
 
-                        Higiene: <strong>{{guidu.higiene}}</strong> 
-                        {% if guidu.higiene > 0 %} <br>(-1 em {{guidu.qnto_falta_higiene}}s) {% endif %}
-                        <div class="progress progress-striped active">
-                            {% if guidu.higiene >= 8 %}<div class="bar bar-success" style="width: {% widthratio guidu.higiene 10 100 %}%;"></div>
-                            {% elif guidu.higiene < 8 and guidu.higiene >= 5 %} <div class="bar bar-info" style="width: {% widthratio guidu.higiene 10 100 %}%;"></div>
-                            {% elif guidu.higiene < 5 and guidu.higiene > 2 %} <div class="bar bar-warning" style="width: {% widthratio guidu.higiene 10 100 %}%;"></div>
-                            {% else %} <div class="bar bar-danger" style="width: {% widthratio guidu.higiene 10 100 %}%;"></div>
-                            {% endif %}
-                        </div>
+            Higiene: <strong>{{guidu.higiene}}</strong> 
+            {% if guidu.higiene > 0 %} <br>(-1 em {{guidu.qnto_falta_higiene}}s) {% endif %}
+            <div class="progress progress-striped active">
+                {% if guidu.higiene >= 8 %}<div class="bar bar-success" style="width: {% widthratio guidu.higiene 10 100 %}%;"></div>
+                {% elif guidu.higiene < 8 and guidu.higiene >= 5 %} <div class="bar bar-info" style="width: {% widthratio guidu.higiene 10 100 %}%;"></div>
+                {% elif guidu.higiene < 5 and guidu.higiene > 2 %} <div class="bar bar-warning" style="width: {% widthratio guidu.higiene 10 100 %}%;"></div>
+                {% else %} <div class="bar bar-danger" style="width: {% widthratio guidu.higiene 10 100 %}%;"></div>
+                {% endif %}
+            </div>
 
-                        Diversão: <strong>{{guidu.diversao}}</strong> 
-                        {% if guidu.diversao > 0 %} <br>(-1 em {{guidu.qnto_falta_diversao}}s) {% endif %}
-                        <div class="progress progress-striped active">
-                            {% if guidu.diversao >= 8 %}<div class="bar bar-success" style="width: {% widthratio guidu.diversao 10 100 %}%;"></div>
-                            {% elif guidu.diversao < 8 and guidu.diversao >= 5 %} <div class="bar bar-info" style="width: {% widthratio guidu.diversao 10 100 %}%;"></div>
-                            {% elif guidu.diversao < 5 and guidu.diversao > 2 %} <div class="bar bar-warning" style="width: {% widthratio guidu.diversao 10 100 %}%;"></div>
-                            {% else %} <div class="bar bar-danger" style="width: {% widthratio guidu.diversao 10 100 %}%;"></div>
-                            {% endif %}
-                        </div>
+            Diversão: <strong>{{guidu.diversao}}</strong> 
+            {% if guidu.diversao > 0 %} <br>(-1 em {{guidu.qnto_falta_diversao}}s) {% endif %}
+            <div class="progress progress-striped active">
+                {% if guidu.diversao >= 8 %}<div class="bar bar-success" style="width: {% widthratio guidu.diversao 10 100 %}%;"></div>
+                {% elif guidu.diversao < 8 and guidu.diversao >= 5 %} <div class="bar bar-info" style="width: {% widthratio guidu.diversao 10 100 %}%;"></div>
+                {% elif guidu.diversao < 5 and guidu.diversao > 2 %} <div class="bar bar-warning" style="width: {% widthratio guidu.diversao 10 100 %}%;"></div>
+                {% else %} <div class="bar bar-danger" style="width: {% widthratio guidu.diversao 10 100 %}%;"></div>
+                {% endif %}
+            </div>
 
-                        Social: <strong>{{guidu.social}}</strong> 
-                        {% if guidu.social > 0 %} <br>(-1 em {{guidu.qnto_falta_social}}s) {% endif %}
-                        <div class="progress progress-striped active">
-                            {% if guidu.social >= 8%}<div class="bar bar-success" style="width: {% widthratio guidu.social 10 100 %}%;"></div>
-                            {% elif guidu.social < 8 and guidu.social >= 5 %} <div class="bar bar-info" style="width: {% widthratio guidu.social 10 100 %}%;"></div>
-                            {% elif guidu.social < 5 and guidu.social > 2 %} <div class="bar bar-warning" style="width: {% widthratio guidu.social 10 100 %}%;"></div>
-                            {% else %} <div class="bar bar-danger" style="width: {% widthratio guidu.social 10 100 %}%;"></div>
-                            {% endif %}
-                        </div>
+            Social: <strong>{{guidu.social}}</strong> 
+            {% if guidu.social > 0 %} <br>(-1 em {{guidu.qnto_falta_social}}s) {% endif %}
+            <div class="progress progress-striped active">
+                {% if guidu.social >= 8%}<div class="bar bar-success" style="width: {% widthratio guidu.social 10 100 %}%;"></div>
+                {% elif guidu.social < 8 and guidu.social >= 5 %} <div class="bar bar-info" style="width: {% widthratio guidu.social 10 100 %}%;"></div>
+                {% elif guidu.social < 5 and guidu.social > 2 %} <div class="bar bar-warning" style="width: {% widthratio guidu.social 10 100 %}%;"></div>
+                {% else %} <div class="bar bar-danger" style="width: {% widthratio guidu.social 10 100 %}%;"></div>
+                {% endif %}
+            </div>
 
-                        Energia: <strong>{{guidu.energia}}</strong> 
-                        
-                        	{% if guidu.esta_dormindo %} 
-                        		{% if guidu.energia < 10%} <br>(+1 em {{guidu.qnto_falta_energia}}s){%endif%}
-                        	{% else %} 
-                        		{% if guidu.energia > 0 %} <br>(-1 em {{guidu.qnto_falta_energia}}s){% endif %}
-                        	{% endif %}
-                        
-                        <div class="progress progress-striped active">
-                            {% if guidu.energia >= 8 %}<div class="bar bar-success" style="width: {% widthratio guidu.energia 10 100 %}%;"></div>
-                            {% elif guidu.energia < 8 and guidu.energia >= 5 %} <div class="bar bar-info" style="width: {% widthratio guidu.energia 10 100 %}%;"></div>
-                            {% elif guidu.energia < 5 and guidu.energia > 2 %} <div class="bar bar-warning" style="width: {% widthratio guidu.energia 10 100 %}%;"></div>
-                            {% else %} <div class="bar bar-danger" style="width: {% widthratio guidu.energia 10 100 %}%;"></div>
-                            {% endif %}
-                        </div>
+            Energia: <strong>{{guidu.energia}}</strong> 
+            
+            	{% if guidu.esta_dormindo %} 
+            		{% if guidu.energia < 10%} <br>(+1 em {{guidu.qnto_falta_energia}}s){%endif%}
+            	{% else %} 
+            		{% if guidu.energia > 0 %} <br>(-1 em {{guidu.qnto_falta_energia}}s){% endif %}
+            	{% endif %}
+            
+            <div class="progress progress-striped active">
+                {% if guidu.energia >= 8 %}<div class="bar bar-success" style="width: {% widthratio guidu.energia 10 100 %}%;"></div>
+                {% elif guidu.energia < 8 and guidu.energia >= 5 %} <div class="bar bar-info" style="width: {% widthratio guidu.energia 10 100 %}%;"></div>
+                {% elif guidu.energia < 5 and guidu.energia > 2 %} <div class="bar bar-warning" style="width: {% widthratio guidu.energia 10 100 %}%;"></div>
+                {% else %} <div class="bar bar-danger" style="width: {% widthratio guidu.energia 10 100 %}%;"></div>
+                {% endif %}
+            </div>
 
-                        Pontos de Ação: <strong>{{jogador.guimoves}}</strong>  
-                        {% if jogador.guimoves < 10 %} <br>(+1 em {{jogador.qnto_falta_acao}}s) {% endif %}
-                        <div class="progress progress-striped active">
-                            {% if jogador.guimoves >= 8%}<div class="bar bar-success" style="width: {% widthratio jogador.guimoves 10 100 %}%;"></div>
-                            {% elif jogador.guimoves < 8 and jogador.guimoves >= 5 %} <div class="bar bar-info" style="width: {% widthratio jogador.guimoves 10 100 %}%;"></div>
-                            {% elif jogador.guimoves < 5 and jogador.guimoves > 2 %} <div class="bar bar-warning" style="width: {% widthratio jogador.guimoves 10 100 %}%;"></div>
-                            {% else %} <div class="bar bar-danger" style="width: {% widthratio jogador.guimoves 10 100 %}%;"></div>
-                            {% endif %}
-                        </div>
+            Pontos de Ação: <strong>{{jogador.guimoves}}</strong>  
+            {% if jogador.guimoves < 10 %} <br>(+1 em {{jogador.qnto_falta_acao}}s) {% endif %}
+            <div class="progress progress-striped active">
+                {% if jogador.guimoves >= 8%}<div class="bar bar-success" style="width: {% widthratio jogador.guimoves 10 100 %}%;"></div>
+                {% elif jogador.guimoves < 8 and jogador.guimoves >= 5 %} <div class="bar bar-info" style="width: {% widthratio jogador.guimoves 10 100 %}%;"></div>
+                {% elif jogador.guimoves < 5 and jogador.guimoves > 2 %} <div class="bar bar-warning" style="width: {% widthratio jogador.guimoves 10 100 %}%;"></div>
+                {% else %} <div class="bar bar-danger" style="width: {% widthratio jogador.guimoves 10 100 %}%;"></div>
+                {% endif %}
+            </div>
                     	
 			
         
-         </div>           
+         </div>
+
+         <div class="span3">
+
+            <p><b>Golpes aprendidos:</b></p>
+            {% if guidu.golpe_aprendido1 %} <p> {{guidu.golpe_aprendido1.nome}} <img src="{% url pagina_index %}estaticos/{{guidu.golpe_aprendido1.tipo}}" width="70"/> </p> {% endif %}
+
+            {% if guidu.golpe_aprendido2 %} <p> {{guidu.golpe_aprendido2.nome}} <img src="{% url pagina_index %}estaticos/{{guidu.golpe_aprendido2.tipo}}" width="70"/></p> {% endif %}
+            {% if guidu.golpe_aprendido3 %} <p> {{guidu.golpe_aprendido3.nome}} <img src="{% url pagina_index %}estaticos/{{guidu.golpe_aprendido3.tipo}}" width="70"/></p> {% endif %}
+                
+            <br><br>
+
+            <a href="{{guidu.id}}/treinar_guidu" class="btn btn-info">Treinar Guidu</a>
+            {% if guidu.golpe_treinando != None %}
+                <p> <b>Golpe em treino:</b> <br>{{guidu.golpe_treinando.nome}} <img src="{% url pagina_index %}estaticos/{{guidu.golpe_aprendido1.tipo}}" width="70"/></p>
+                <p> <b>Quanto falta:</b> {{guidu.qnto_falta_treino}} segundos</p>
+                {%if guidu.esta_treinando%}
+                    <p><b>Status: </b>treinando</p>
+                    <a href="{{guidu.id}}/pausar_treino/" class="btn btn-info">Pausar treino</a>
+                
+                {% else %}
+
+                    <p><b>Status: </b>em pausa</p>
+                    <a href="{{guidu.id}}/treinar_guidu/{{guidu.golpe_treinando.id}}"class="btn btn-info">Retomar Treino</a>
+                
+                {% endif %}
+
+            {% endif %}  
+        </div>         
                     
                 </div><!--/span10-->
                 </div>

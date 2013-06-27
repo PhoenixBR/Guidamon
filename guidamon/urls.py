@@ -30,9 +30,15 @@ urlpatterns = patterns('',
     url(r'^loja/$','views.site.loja', name='pagina_da_loja'),
     url(r'^comprar_livro/(\d+)/$','views.site.comprar_livro'),
 
-    url(r'^itens/$','views.site.itens', name='pagina_itens'),
+    url(r'^itens/$','views.site.itens_comprados', name='pagina_itens_comprados'),
     url(r'^(\d+)/treinar_guidu/$','views.site.treinar_guidu_escolher_golpe'),
     url(r'^(\d+)/treinar_guidu/(\d+)/$','views.site.treinar_guidu'),
+    url(r'^(\d+)/pausar_treino/$','views.site.pausar_treino'),
+    url(r'^(\d+)/treinar_outro_golpe/(\d+)/$','views.site.treinar_outro_golpe'),
+
+    url(r'^(\d+)/lutar/$','views.site.pagina_lutas'),
+    url(r'^(\d+)/lutar/(\d+)/$','views.site.pagina_lutas'),   
+    
 
 
     # Uncomment the admin/doc line below to enable admin documentation:

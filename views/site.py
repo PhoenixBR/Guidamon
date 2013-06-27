@@ -1,10 +1,10 @@
-from django.shortcuts import redirect, render_to_response, get_object_or_404
+from django.shortcuts import redirect, render_to_response, get_object_or_404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.template import RequestContext
 
 from guidu.models import GuiduTipo, Guidu
-from golpe.models import Livro
+from golpe.models import Golpe, Livro
 
 def cadastrar(request):
     if request.method == "POST":
@@ -84,26 +84,90 @@ def comprar_livro(request, id_livro):
         return render_to_response("livro_ncomprado.html", {"jogador":jogador}, context_instance=RequestContext(request))
 
 @login_required
-def itens(request):
+def itens_comprados(request):
     jogador = request.user.get_profile() 
-    return render_to_response("itens.html", {"jogador":jogador})
+    return render_to_response("itens_comprados.html", {"jogador":jogador})
 
 @login_required
-def treinar_guidu_escolher_golpe(request, id_golpe):
+def treinar_guidu_escolher_golpe(request, id_guidu):
     jogador = request.user.get_profile()
-    return render_to_response("treinar_guidu.html", {"jogador":jogador}, 
+    guidu = get_object_or_404(Guidu, pk=id_guidu)
+    return render_to_response("treinar_guidu.html", {"jogador":jogador, "guidu":guidu}, 
                                 context_instance=RequestContext(request))
 
 @login_required
 def treinar_guidu(request, id_guidu, id_golpe):
     jogador = request.user.get_profile()
-    guidu = Guidu.objects.get_object_or_404(pk=id_guidu, jogador=jogador)
-    #verificar se já treinou esse golpe
-    #verificar se os slots de 5 golpes estão cheios
-    #verificar se tem guimoves
-    #verificar se já está treinando outro golpe ou mesmo esse 
+    guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
+    golpe = get_object_or_404(Golpe, pk=id_golpe)
 
 
+    #verificar se tem guimoves suficientes
+    #lembrar de alterar o tempo que os atributos(fome, banho...) decrescem
+    #nao deixar que eles 
+
+    #verifica se ja esta treinando algum golpe
+    if(guidu.golpe_treinando):
+        if (guidu.golpe_treinando!=golpe):
+            #-> perguntar se realmente quer trocar de treino
+            return render_to_response("treinar_outro_golpe.html", {"jogador":jogador, "guidu":guidu, "golpe":golpe}, 
+                                context_instance=RequestContext(request))
+        else:
+            if(guidu.esta_treinando):
+                return HttpResponse("Ja esta treinando esse golpe")
+            else:
+                guidu.comecar_treino(golpe)
+
+    else:
+        #verifica se ja treinou esse golpe
+        if(guidu.golpe_aprendido1 and guidu.golpe_aprendido1==golpe):
+            return HttpResponse("%s ja sabe esse golpe!" % guidu.nome)
+        elif(guidu.golpe_aprendido2 and guidu.golpe_aprendido2==golpe):
+            return HttpResponse("%s ja sabe esse golpe!" % guidu.nome)
+        elif(guidu.golpe_aprendido3 and guidu.golpe_aprendido3==golpe):
+            return HttpResponse("%s ja sabe esse golpe!" % guidu.nome)
+        #verifica se os slots de 3 golpes estao cheios
+        elif(guidu.golpe_aprendido1 and guidu.golpe_aprendido2 and guidu.golpe_aprendido3):
+            return HttpResponse("%s ja aprendeu 3 golpes. Para aprender um novo golpe precisa antes esquecer um golpe" % guidu.nome)
+        else:
+            guidu.comecar_treino(golpe)
+
+    return redirect(index)
+
+@login_required
+def treinar_outro_golpe(request, id_guidu, id_golpe):
+    jogador = request.user.get_profile()
+    guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
+    guidu.parar_treino()
+    return treinar_guidu(request, id_guidu, id_golpe)
+
+#criar funcao pra esquecer golpe
+
+
+
+@login_required
+def pausar_treino(request, id_guidu):
+    jogador = request.user.get_profile()
+    guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
+    guidu.verifica_termino_treino()
+    if(guidu.golpe_treinando and guidu.esta_treinando):
+        guidu.pausar_treino()
+    return redirect(index)
+
+@login_required
+def pagina_lutas(request, id_guidu):
+    jogador = request.user.get_profile()
+    guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
+    guidus = Guidu.objects.all()
+    return render_to_response("pagina_lutas.html", {"jogador":jogador, "guidu":guidu, "guidus":guidus}, 
+                                context_instance=RequestContext(request))
+
+@login_required
+def lutar(request, id_guidu, id_guidu_alvo):
+    jogador = request.user.get_profile()
+    guidu = get_object_or_404(Guidu, pk=id_guidu, jogador=jogador)
+    guidu_alvo = get_object_or_404(Guidu, pk=id_guidu_alvo)
+    return redirect(index)
 
 @login_required
 def alimentar(request, id_guidu, id_alimento):

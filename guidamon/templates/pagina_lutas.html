@@ -1,0 +1,17 @@
+{% extends "logado.html" %}
+{% csrf_token %}
+{% load staticfiles %}
+
+{% block conteudo %}
+	<h1> {{ guidu.nome }} </h1>
+
+	{% for guid in guidus %}
+		{% if guid in jogador.guidus.all %}
+			{% if guid != guidu %}
+				<div> {{guid.nome}} Esse guidu eh seu</div> 
+			{% endif %}
+		{% else %}
+			<div>{{guid.nome}} </div> 
+		{% endif %}
+	{% endfor %}
+{% endblock %}

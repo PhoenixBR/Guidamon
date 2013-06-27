@@ -19,18 +19,11 @@
     </div>
     <div class="row">
         <div class='span3'>
-            <a href="/comprar_livro/{{livro.id}}"><img src="{% url pagina_index %}estaticos/{{livro.tipo}}" width="300"/></a>
+            <img src="{% url pagina_index %}estaticos/{{livro.tipo}}" width="300"/>
         </div>
         <div class='span3'>
             {% for golpe in livro.golpe.all %}
-                <p>{{golpe.nome}}
-                    {% if guidu.golpe_treinando == golpe %}
-                        <a href="{{ golpe.id }}" class="btn btn-info">Retomar treino</a>                        
-                    {% else %}
-                	   <a href="{{ golpe.id }}" class="btn btn-info">Treinar Guidu</a>
-                    {% endif %}
-
-                </p>
+                <li>{{golpe.nome}}</li>
             {% endfor %}
         </div>       
     </div>

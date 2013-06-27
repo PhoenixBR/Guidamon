@@ -7,6 +7,7 @@ class Golpe(models.Model):
     velocidade = models.PositiveIntegerField(default=0)
     nivel = models.PositiveSmallIntegerField(default=0)
     tipo = models.CharField(max_length=20)
+    tempo_aprendizagem = models.PositiveIntegerField(default=7200)
 
     def __unicode__(self):
         return self.nome
@@ -17,3 +18,6 @@ class Livro(models.Model):
     preco = models.PositiveIntegerField(default=0)
     tipo = models.CharField(max_length=30)
     golpe = models.ManyToManyField(Golpe)
+
+    def __unicode__(self):
+        return self.nome

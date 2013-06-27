@@ -1,5 +1,6 @@
 from django.db import models
 from jogador.models import Jogador
+from golpe.models import Golpe
 
 import datetime
 import pytz
@@ -34,6 +35,16 @@ class Guidu(models.Model):
     social_update = models.DateTimeField(auto_now_add=True)
     energia_update = models.DateTimeField(auto_now_add=True)
 
+    ataque = models.PositiveSmallIntegerField(default=10)
+    defesa = models.PositiveSmallIntegerField(default=10)
+    dextreza = models.PositiveSmallIntegerField(default=10)
+    magia = models.PositiveSmallIntegerField(default=10)
+    vida = models.PositiveSmallIntegerField(default=10)
+
+    hp = models.PositiveIntegerField(default=100) #hp = vida * 10 no max
+    nivel = models.PositiveSmallIntegerField(default=1)
+    experiencia = models.PositiveIntegerField(default=0)
+
     esta_dormindo = models.BooleanField(default=False)
     esta_morto = models.BooleanField(default=False)
 
@@ -42,7 +53,19 @@ class Guidu(models.Model):
     humor_update = models.DateTimeField(auto_now_add=True)
     humor = models.CharField(max_length=50, default="normal")
     humor_guicoin = models.PositiveIntegerField(default=0)
-    
+
+    golpe_aprendido1 = models.ForeignKey(Golpe, null=True, blank=True, related_name="+")
+    golpe_aprendido2 = models.ForeignKey(Golpe, null=True, blank=True, related_name="+")
+    golpe_aprendido3 = models.ForeignKey(Golpe, null=True, blank=True, related_name="+")
+    golpe_aprendido4 = models.ForeignKey(Golpe, null=True, blank=True, related_name="+")
+    golpe_aprendido5 = models.ForeignKey(Golpe, null=True, blank=True, related_name="+")
+
+    esta_treinando = models.BooleanField(default=False)
+    golpe_treinando = models.ForeignKey(Golpe, null=True, blank=True, related_name="+") 
+    golpe_treinando_desde = models.DateTimeField(null=True, blank=True)
+    golpe_tempo_treinado = models.PositiveIntegerField(default=0)
+
+
     def get_periodo_acordado(self):
         return {'periodo_fome':1080, 'periodo_higiene':2160, 
                 'periodo_diversao':720, 'periodo_banheiro':1080, 
@@ -55,7 +78,7 @@ class Guidu(models.Model):
 
     def refresh(self):
         
-        print "refresh"
+        
         self.adiciona_moedas() #adiciona moedas antes de possivelmente alterar humor
         self.calcular_humor() #calcula humor de agora antes de verificar morte pq vai que o guidu melhorou...
         self.verificar_morte() #verifica se esta morto
@@ -201,9 +224,9 @@ class Guidu(models.Model):
                 #se nao existe nenhum update para fazer, atualiza o fome_update
                 self.energia_update = agora
 
-
+        self.verifica_termino_treino()
         self.calcular_humor() #calcula humor denovo pra saber se alterou depois das mudancas.
-        self.save() 
+        self.save()
 
     def __unicode__(self):
         return self.nome
@@ -420,6 +443,19 @@ class Guidu(models.Model):
         timedelta = ((self.energia_update + datetime.timedelta(seconds=periodo['periodo_energia'])) - agora)
         return str(datetime.timedelta(seconds=timedelta.seconds)) #o tempo sai no formato hh:mm:ss
 
+    def qnto_falta_treino(self):
+        
+        #self.refresh() #esse refresh pode ser tirado se prometer ser logo depois de carregar a pagina (e dar refresh)
+        if self.golpe_treinando:
+            agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+            tempo_total = self.golpe_treinando.tempo_aprendizagem
+            if(self.esta_treinando):
+                tempo_ja_aprendido = (agora-self.golpe_treinando_desde).seconds + self.golpe_tempo_treinado
+            else:
+                tempo_ja_aprendido = self.golpe_tempo_treinado
+            qnto_falta = tempo_total - tempo_ja_aprendido
+            return qnto_falta
+
     def adiciona_moedas(self):
         if(self.humor == 'feliz' or self.humor == 'normal'):
             periodo = 60 #1 min            
@@ -436,9 +472,50 @@ class Guidu(models.Model):
                     self.jogador.save()
                     self.humor_guicoin = update
                     self.save()
-                    print '============ GuiCoin ===========' + str(self.jogador.guicoin)
+
+    def verifica_termino_treino(self):
+        if self.esta_treinando:
+            periodo = self.golpe_treinando.tempo_aprendizagem            
+            agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+            tempo_treinando = (agora - self.golpe_treinando_desde).seconds + self.golpe_tempo_treinado
+            if(tempo_treinando>=periodo):
+                
+                #tem que ter certeza que ha pelo menos um slot livre
+                #na hora que (re)comecar a treinar, tem que garantir isso.
+                if(self.golpe_aprendido1==None): self.golpe_aprendido1 = self.golpe_treinando
+                elif(self.golpe_aprendido2==None): self.golpe_aprendido2 = self.golpe_treinando
+                elif(self.golpe_aprendido3==None): self.golpe_aprendido3 = self.golpe_treinando
+
+                self.parar_treino()
+
+    def pausar_treino(self):
+        
+        agora = datetime.datetime.now(pytz.timezone('America/Recife'))
+        self.golpe_tempo_treinado += (agora-self.golpe_treinando_desde).seconds
+        self.golpe_treinando_desde = None
+        self.esta_treinando = False
+        #guidu.golpe_treinando ainda estara la, pra lembrar qual o golpe que estava treinando
+        self.save()
+
+    def parar_treino(self):
+        self.esta_treinando = False
+        self.golpe_treinando = None
+        self.golpe_treinando_desde = None
+        self.golpe_tempo_treinado = 0
+        self.save()
+        
 
 
+
+    def comecar_treino(self, golpe):
+
+        if(self.golpe_treinando==None):
+            self.golpe_tempo_treinado = 0
+            self.golpe_treinando = golpe
+
+        self.golpe_treinando_desde = datetime.datetime.now(pytz.timezone('America/Recife'))
+        self.esta_treinando = True
+        self.save()
 
 def define_humor_inicial(sender, instance, created, **kwargs):
     if created:

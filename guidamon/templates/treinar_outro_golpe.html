@@ -1,0 +1,10 @@
+{% extends "logado.html" %}
+
+{% block conteudo %}
+
+<h2> {{guidu.nome}} ja esta treinando {{guidu.golpe_treinando.nome}}. 
+<br>Deseja mesmo interromper o treino para comecar a treinar {{golpe.nome}}?</h2>
+<a href="/{{guidu.id}}/treinar_outro_golpe/{{golpe.id}}" class="btn btn-info">Sim</a>
+<a href="/{{guidu.id}}/treinar_guidu" class="btn btn-info">Nao</a>
+
+{% endblock %}
